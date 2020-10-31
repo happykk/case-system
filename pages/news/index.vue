@@ -1,6 +1,6 @@
 <template>
 	<section class="container">
-		<NewsBanner></NewsBanner>
+		<!-- <NewsBanner></NewsBanner> -->
 		<!-- 面包屑部分 -->
 		<div id="bread-nav">
 			<div class="brand-nav-box clearfix">
