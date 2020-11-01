@@ -57,7 +57,7 @@
           },
           {
             title: '案例库',
-            link: '/service/presales'
+            link: '/cases'
           },
           {
             title: '新闻资讯',

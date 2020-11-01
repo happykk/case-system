@@ -13,7 +13,10 @@ import {
   Input,
   Carousel,
   CarouselItem,
-  Pagination
+  Pagination,
+  Select,
+  Option,
+  DatePicker
 } from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 
@@ -31,7 +34,10 @@ const components = [
   Input,
   Carousel,
   CarouselItem,
-  Pagination
+  Pagination,
+  Select,
+  Option,
+  DatePicker
 ];
 
 const Element = {

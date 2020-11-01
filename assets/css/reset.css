@@ -148,4 +148,8 @@
     color: #888888;
     text-align: center;
   }
+  .mod-block{
+    width: 1200px;
+    margin:  0 auto;
+  }
   

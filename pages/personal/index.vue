@@ -220,7 +220,6 @@
     float: left;
     color: #444444;
     font-size: 14px;
-    display: inline-block;
     vertical-align: middle;
     *vertical-align: auto;
     zoom: 1;
@@ -231,11 +230,9 @@
     color: #666666;
   }
   .account-num-box p > a {
-    display: inline-block;
     vertical-align: middle;
     *vertical-align: auto;
     zoom: 1;
-    *display: inline;
     width: 120px;
     height: 36px;
     line-height: 36px;
