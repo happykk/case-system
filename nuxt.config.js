@@ -108,5 +108,5 @@ module.exports = {
       // ))
     }
   },
-  plugins: ["@/plugins/element-ui"]
+  plugins: ["@/plugins/element-ui", '@/plugins/axios']
 }

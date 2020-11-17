@@ -5,7 +5,7 @@
         <div class="i-h-top">
           <div class="t-m-login">
             <i class="el-icon-user-solid"></i>
-            <a href="#">请登录</a>
+            <router-link to="/login">请登录</router-link>
           </div>
         </div>
         <div class="i-h-logo">
