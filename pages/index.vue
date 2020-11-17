@@ -9,20 +9,20 @@
             <nuxt-link to="news" class="fr">MORE ></nuxt-link>
           </div>
           <div class="lists">
-            <div v-for="(item, index) in reviewArr" :key="index" :class="{'special': index==0}">
+            <div v-for="(item, index) in newsData" :key="index" :class="{'special': index==0}">
               <!-- <nuxt-link target="_blank" 
                 :to="{name: 'news-newsView-id',params:{id:item.articleId},query: {category: item.articleCategoryId}}">
                 <h2>{{item.title}}</h2>
               </nuxt-link> -->
               <div class="list">
-                <img :src="item.poster">
+                <img :src="defaultImg">
                 <div class="list-msg">
                   <div class="list-title ellipsis">
                     {{ item.title }}
-                    <span v-if="index>0" class="fr time">{{item.time}}</span>
+                    <span v-if="index>0" class="fr time">{{item.update_time.split(' ')[0]}}</span>
                   </div>
                   <div class="list-info">
-                    <p>{{item.brief}}</p>
+                    <p>{{item.desc}}</p>
                     <a v-if="index==0" class="view-all fr" href="#">[查看全文]</a>
                   </div>
                 </div>
@@ -37,7 +37,7 @@
               <router-link to="professors" class="fr">MORE ></router-link>
             </div>
             <ul class="notice-lists">
-              <li class="" v-for="(item,index) in noticeList" :key="index">{{item}}</li>
+              <li v-for="(item,index) in noticeData" :key="index">{{item.title}}</li>
             </ul>
           </div>
           <div class="quick-entry">
@@ -60,7 +60,7 @@
           </div>
         </div>
       </div>
-      <div class="case-list">
+      <!-- <div class="case-list">
         <div class="w">
           <div class="header-title">
             <span class="fl">优秀案例</span>
@@ -82,38 +82,8 @@
               </div>
             </div>
           </div>
-          <!-- <div class="loadmore" @click="loadmore">
-            <span v-if="getNewsStatus">加载更多</span>
-            <span v-else>
-              <i class="el-icon-loading"></i> 加载中...
-            </span>
-          </div> -->
         </div>
-      </div>
-      <!-- 新闻资讯部分 -->
-      <div id="index-news">
-        <div class="news-content">
-          <div class="news-content-top">
-            <div class="news-content-top-titleC"><h2>新闻资讯</h2></div>
-            <div class="news-content-top-titleE">News Center</div>
-            <div class="news-content-top-description">一切资讯都是有价值的</div>
-          </div>
-          <div class="news-content-box">
-            <div class="news-kind-container">
-              <ul class="news-kind-nav">
-                <li class="news-kind" v-for="(item,index) in $store.state.headNewsNav" :key="index" :class="{active:index == clickNewsIndex}" @click="getNewsList(index)">{{item.articleCategoryName}}</li>
-              </ul>
-              <div class="news-tab-content">
-                <indexNewsListShow :indexFirstNewsList="indexFirstNewsList1" :indexNewsList="indexNewsList1" v-show="0 == clickNewsIndex"></indexNewsListShow>
-                <indexNewsListShow :indexFirstNewsList="indexFirstNewsList2" :indexNewsList="indexNewsList2" v-show="1 == clickNewsIndex"></indexNewsListShow>
-                <indexNewsListShow :indexFirstNewsList="indexFirstNewsList3" :indexNewsList="indexNewsList3" v-show="2 == clickNewsIndex"></indexNewsListShow>
-                <indexNewsListShow :indexFirstNewsList="indexFirstNewsList4" :indexNewsList="indexNewsList4" v-show="3 == clickNewsIndex"></indexNewsListShow>
-                <indexNewsListShow :indexFirstNewsList="indexFirstNewsList5" :indexNewsList="indexNewsList5" v-show="4 == clickNewsIndex"></indexNewsListShow>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>  
+      </div> -->
   </section>
 </template>
 <script>
@@ -128,6 +98,7 @@
       return {
         num:0,
         clickNewsIndex: 0,
+        defaultImg: 'http://img.visney.cn/img/nuxtPc/experice-bt/place_desc_right1.png',
         reviewArr: [
           {
             poster: 'http://img.visney.cn/img/nuxtPc/experice-bt/place_desc_right1.png',
@@ -167,47 +138,29 @@
       }
     },
     async asyncData({params,store}){
+      
       //首页head信息
-      let metaData = await axios(`${store.state.wordpressAPI}/NavigationMeta/get/1`);
+      let metaData = {
+        navigationTitle: '湖南省研究生会计专业案例库',
+        navigationKeyword: '案例库,研究生,会计',
+        navigationDescription: '湖南省研究生会计专业案例库'
+      };
       //banner数据动态获取
       let banner = await axios(`${store.state.wordpressAPI}/banner/selectAllByTpye/1`);
-      //首页新闻信息
-      let indexFirstNewsList1 = await axios(`${store.state.wordpressAPI}/article/getRecommend/1`);
-			let indexFirstNewsList2 = await axios(`${store.state.wordpressAPI}/article/getRecommend/2`);
-			let indexFirstNewsList3 = await axios(`${store.state.wordpressAPI}/article/getRecommend/3`);
-			let indexFirstNewsList4 = await axios(`${store.state.wordpressAPI}/article/getRecommend/4`);
-			let indexFirstNewsList5 = await axios(`${store.state.wordpressAPI}/article/getRecommend/5`);
-
-			let indexNewsList1 = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/1/9`);
-			let indexNewsList2 = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/2/9`);
-			let indexNewsList3 = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/3/9`);
-			let indexNewsList4 = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/4/9`);
-      let indexNewsList5 = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/5/9`);
-      
+      //首页通知信息
+      let notice = await axios(`${store.state.basicUrl}/api/article/list?type=2&page_no=1&page_size=6`)
+      let news = await axios(`${store.state.basicUrl}/api/article/list?type=1&page_no=1&page_size=3`)
       return {
-        metaData: metaData.data,
+        metaData: metaData,
         bannerData: banner.data,
-        //首页新闻信息
-        indexFirstNewsList1: indexFirstNewsList1.data,
-        indexFirstNewsList2: indexFirstNewsList2.data,
-        indexFirstNewsList3: indexFirstNewsList3.data,
-        indexFirstNewsList4: indexFirstNewsList4.data,
-        indexFirstNewsList5: indexFirstNewsList5.data,
-        indexNewsList1: indexNewsList1.data,
-        indexNewsList2: indexNewsList2.data,
-        indexNewsList3: indexNewsList3.data,
-        indexNewsList4: indexNewsList4.data,
-        indexNewsList5: indexNewsList5.data,
+        noticeData: notice.data.data,
+        newsData: news.data.data
       } 
     },
     methods: {
       tab (index){
         this.num = index;
-      },
-      getNewsList (index){
-        this.clickNewsIndex = index;
       }
-
     }
   }
 </script>

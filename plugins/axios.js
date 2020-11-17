@@ -1,6 +1,7 @@
 import axios from 'axios'
 import querystring from 'querystring'
-axios.defaults.withCredentials = true
+import { Message } from "element-ui";
+// axios.defaults.withCredentials = true
 var ajaxFun = function (type, url, data) {
   data = data || {}
   if (type === 'post') {
@@ -11,16 +12,9 @@ var ajaxFun = function (type, url, data) {
       params: data
     }
   }
-  // if (type === 'jsonp') {
-  //   let hyphen = (url.indexOf('?') > -1 ? '&' : '?')
-  //   return axios({url: url + hyphen + querystring.encode(data), adapter: jsonpAdapter}).then((rs) => {
-  //     return rs.data
-  //   })
-  // } else {
-    return axios[type](url, data).then((rs) => {
-      return rs.data
-    })
-  // }
+  return axios[type](url, data).then((rs) => {
+    return rs.data
+  })
 }
 var ajax = {
   get: (url, data) => ajaxFun('get', url, data),
@@ -49,7 +43,44 @@ var interceptors = {
     }
   }
 }
-
+interceptors.response.use(
+  response => {
+    // 避免取对象报错
+    if (response.data.data === null) {
+      response.data.data = false
+    }
+    if ((!response.data || response.data.code === undefined) && response.data.indexOf('DOCTYPE html') < 0) {
+      Message.error('接口格式错误')
+      return Promise.resolve(false)
+    } else if (response.data) {
+      if (response.data.code === 100000) {
+        store.dispatch("fedLogout").then(() => {
+          Message.error("验证失败,请重新登录");
+          router.push({
+            path: "/login"
+          });
+        });
+        return Promise.resolve(false)
+      } else if (Number(response.data.code) !== 0) {
+        if (response.data.msg && response.data.msg.length !== 0) {
+          Message.error(response.data.msg)
+        } else {
+          Message.error('接口异常')
+        }
+        return Promise.resolve(false)
+      }
+    }
+    return Promise.resolve(response)
+  },
+  err => {
+    if (err.message.includes('timeout')) {
+      Message.error('请求超时')
+    } else {
+      Message.error('接口错误')
+    }
+    Promise.resolve(false)
+  }
+)
 var setOpt = function (opt) {
   Object.assign(axios.defaults, opt)
 }

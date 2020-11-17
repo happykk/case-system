@@ -49,14 +49,15 @@ export default {
   },
   methods: {
     submitForm () {
-      // axios.get(`http://106.52.85.160/api/login`, this.ruleForm).then(res=>{
-        
-      // }).catch(err=>{
-      //   console.log(err)
-      // })
-      this.$ajax.get('http://106.52.85.160/api/login', this.ruleForm).then((data) => {
-        console.log(data)
+      // 405925123@qq.com 824655qqq
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          axios('http://106.52.85.160/api/login', this.ruleForm).then((data) => {
+            this.$router.back()
+          })
+        }
       })
+     
     }
   }
 		

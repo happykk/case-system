@@ -106,7 +106,11 @@ module.exports = {
       // .then(res => res.data.map(
       //   newsView => '/news/newsView/' + newsView.articleId + '?category=' + newsView.category
       // ))
+      // , '@/plugins/axios'
     }
   },
-  plugins: ["@/plugins/element-ui", '@/plugins/axios']
+  plugins: ["@/plugins/element-ui"],
+  // env: {
+  //   baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+  // }
 }
