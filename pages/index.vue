@@ -15,7 +15,7 @@
                 <h2>{{item.title}}</h2>
               </nuxt-link> -->
               <div class="list">
-                <img :src="defaultImg">
+                <img :src="item.img ? 'http://81.71.142.158/static/image/'+item.img : defaultImg">
                 <div class="list-msg">
                   <div class="list-title ellipsis">
                     {{ item.title }}
@@ -99,27 +99,8 @@
         num:0,
         clickNewsIndex: 0,
         defaultImg: 'http://img.visney.cn/img/nuxtPc/experice-bt/place_desc_right1.png',
-        reviewArr: [
-          {
-            poster: 'http://img.visney.cn/img/nuxtPc/experice-bt/place_desc_right1.png',
-            title: '关于面向有关高校开展主题案例专项征集的邀请函',
-            brief: '2020年，新冠肺炎疫情突发。党中央高度重视，习近平总书记亲自部署、亲自指挥，始终把人民生命安全和身体健康摆在第一位。我们在脱贫攻坚领域取得的前所未有的成就，彰显了中国共产党领导和我国社会主义制度的政治优势',
-            time: '2018-04-04'
-          },
-          {
-            poster: 'http://img.visney.cn/img/nuxtPc/experice-bt/place_desc_right1.png',
-            title: '阳山智谷EMBA总裁高级研修班 M38班课课程',
-            brief: '北清智库商学院互联网导师喻旭老师为同学们带来了',
-            time: '2018-04-04'
-          },
-          {
-            poster: 'http://img.visney.cn/img/nuxtPc/experice-bt/place_desc_right1.png',
-            title: '阳山智谷【金融EMBA】三月课程纪实',
-            brief: '北清智库商学院互联网导师喻旭老师为同学们带来了«新零售创新战略与路径设计»，从产业的高度，用户的角…',
-            time: '2018-04-04'
-          }
-        ],
-        noticeList: ['如涵控股：“颜值”能否养成“市值”？', '贵烟·国酒香”品牌培育创新之旅：跨界融合点亮体验营品牌培育创新之旅：跨界融合点亮体验营销销...', '壹号土猪：北大猪肉大王的生意经', '华为基业长青的基石：持续创新'],
+        reviewArr: [],
+        noticeList: [],
       }
     },
     components: {
@@ -138,7 +119,6 @@
       }
     },
     async asyncData({params,store}){
-      
       //首页head信息
       let metaData = {
         navigationTitle: '湖南省研究生会计专业案例库',
@@ -146,21 +126,23 @@
         navigationDescription: '湖南省研究生会计专业案例库'
       };
       //banner数据动态获取
-      let banner = await axios(`${store.state.wordpressAPI}/banner/selectAllByTpye/1`);
+      let banner = await axios(`${process.env.BASE_URL}/api/rotation_chart`)
       //首页通知信息
-      let notice = await axios(`${store.state.basicUrl}/api/article/list?type=2&page_no=1&page_size=6`)
-      let news = await axios(`${store.state.basicUrl}/api/article/list?type=1&page_no=1&page_size=3`)
+      let notice = await axios(`${process.env.BASE_URL}/api/article/list?type=2&page_no=1&page_size=6`)
+      let news = await axios(`${process.env.BASE_URL}/api/article/list?type=1&page_no=1&page_size=3`)
       return {
         metaData: metaData,
-        bannerData: banner.data,
+        bannerData: banner.data.data,
         noticeData: notice.data.data,
         newsData: news.data.data
-      } 
+      }
     },
     methods: {
       tab (index){
         this.num = index;
       }
+    },
+    mounted () {
     }
   }
 </script>

@@ -1,11 +1,11 @@
 const axios = require('axios');
-
+// const env = require('./env')
 module.exports = {
   /*
   ** Headers of the page
   */
   head: {
-    title: 'visney',
+    title: '湖南省研究生会计专业案例库',
     meta: [
       { name: 'renderer', content: 'webkit'},
       { name: 'force-rendering', content: 'webkit'},
@@ -107,10 +107,16 @@ module.exports = {
       //   newsView => '/news/newsView/' + newsView.articleId + '?category=' + newsView.category
       // ))
       // , '@/plugins/axios'
+      // package.json
+      // "dev": "nuxt",
+    // "build": "nuxt build",
+    // "start": "nuxt start",
+    // "generate": "nuxt generate",
     }
   },
   plugins: ["@/plugins/element-ui"],
-  // env: {
-  //   baseUrl: process.env.BASE_URL || 'http://localhost:3000'
-  // }
+  env: {
+    BASE_URL: process.env.BASE_URL,
+    NODE_ENV: process.env.NODE_ENV
+  }
 }
