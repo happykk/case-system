@@ -7,23 +7,22 @@
     <div class="news-main">
       <div class="recom-info-content">
         <ul>
-          <li class="recom-info-list" v-for="(list) in recomInfo" :key="list.articleId">
+          <li class="recom-info-list" v-for="(list) in recomInfo" :key="list.id">
             <div class="recom-info-title">
-              <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}"><h2>{{list.articleName}}</h2></nuxt-link>
+              <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}"><h2>{{list.title}}</h2></nuxt-link>
             </div>
             <div class="recom-info-box">
               <div class="recom-info-img">
-                <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}">
-                  <img :src="list.articleImg.articleImgSrc" :alt="list.articleImg.articleImgAlt">
+                <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}">
+                  <img :src="'http://81.71.142.158/static/image/'+list.img">
                 </nuxt-link>
                 <div class="recom-info-times">
-                  <span><font class="dd" id="dd-1">13</font></span>
-                  <font class="ym" id="ym-1">2020.10</font>
-                  <!-- <p>{{list.articleAddTime}}</p> -->
+                  <span><font class="dd" id="dd-1">{{list.update_time.split(' ')[0].split('-')[2]}}</font></span>
+                  <font class="ym" id="ym-1">{{list.update_time.split(' ')[0].split('-')[0]}}-{{list.update_time.split(' ')[0].split('-')[1]}}</font>
                 </div>
               </div>
               <div class="recom-info-right">
-                <div class="recom-info-deesc" >{{list.articleText}}</div>
+                <div class="recom-info-deesc" >{{list.desc}}</div>
               </div>
             </div>
           </li>
@@ -32,21 +31,39 @@
           background
           style="text-align: center;"
           layout="prev, pager, next"
-          :total="1000">
+          @current-change="handleCurrentChange"
+          :total="total">
         </el-pagination>
       </div>
       <div class="recom-info-content-right">
-        <div class="mod">
+        <div class="mod hot-news">
           <h2 class="mod-title">
             <span class="iconwraper"><i class="el-icon-picture"></i></span>
             <span class="text">精彩新闻</span>
             <span class="more">更多 ›</span>
           </h2>
           <ul class="hot-news-list">
-            <li v-for="item in recomInfo" :key="item.articleId">
-              <img :src="item.articleImg.articleImgSrc" alt="">
+            <li>
+              <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:recomInfo[0].id}}">
+                <img :src="'http://81.71.142.158/static/image/'+recomInfo[0].img" alt="">
+                <div class="h-n-item">
+                  {{recomInfo[0].title}}
+                </div>
+              </nuxt-link>
+            </li>
+          </ul>
+        </div>
+        <div class="mod">
+          <h2 class="mod-title">
+            <span class="iconwraper"><i class="el-icon-picture"></i></span>
+            <span class="text">最新资讯</span>
+            <span class="more">更多 ›</span>
+          </h2>
+          <ul class="new-news-list">
+            <li v-for="item in recomInfo.slice(0,2)" :key="item.id">
+              <img :src="'http://81.71.142.158/static/image/'+item.img" alt="">
               <div>
-                <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.articleId},query: {category: item.articleCategoryId}}">{{item.articleName}}</nuxt-link>
+                <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.id}}">{{item.title}}</nuxt-link>
               </div>
             </li>
           </ul>
@@ -72,7 +89,13 @@
             title: '新闻资讯',
             link: '/news'
           },
-        ]
+        ],
+        formData: {
+          type: 2,
+          page_no: 1,
+          page_size: 10
+        },
+        total: 0
       }
 		},
 		components: {
@@ -91,46 +114,23 @@
 			//head信息
 		    let metaData = await axios(`${store.state.wordpressAPI}/NavigationMeta/get/12`);
 			//推荐资讯
-	        let recomData = await axios(`${store.state.wordpressAPI}/article/getArticleCenterRecommends`);
-	        //公司资讯
-	        let companyData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/1/5`);
-
-	        //行业资讯
-	        let industryData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/5/5`);
-	        //家具百科
-	        let furnitureData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/2/5`);
-
-	        //品牌选购
-	        let brandData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/3/5`);
-
-	        //装修摆放
-	        let decorationData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/4/12`);
-	        return {
-	        	metaData: metaData.data,
-	        	recomInfo: recomData.data,
-	        	companyInfo: companyData.data,
-	        	industryInfo: industryData.data,
-	        	furnitureInfo: furnitureData.data,
-	        	brandInfo: brandData.data,
-	        	decorationInfo: decorationData.data
-	        }
-
+        let recomData = await axios(`${process.env.BASE_URL}/api/article/list?type=1&page_no=1&page_size=3`);
+        return {
+          metaData: metaData.data,
+          recomInfo: recomData.data.data,
+        }
 	    },
 	    methods: {
-	    	getTxt (str,index,num1=136,num2=42){
-	    		var txt = str.replace(/<\/?.+?>/g,"").replace(/&nbsp;/ig,"").replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,''); 
-	    		if (index == 0) {
-	    			//截取指定字数末尾显示省略号
-	    			txt = txt.length < num1 ? txt : txt.substring(0,num1).concat('...');
-	    		} else {
-	    			txt = txt.length < num2 ? txt : txt.substring(0,num2).concat('...');
-	    		}
-	    		return txt;
-	    	},
-	    	getTime(time){
-				var time = time.slice(5, 10);
-				return time;
-			}
+	    	handleCurrentChange(){
+
+        },
+	    	getData(){
+          axios(`${process.env.BASE_URL}/api/article/list`,{
+            params: this.formData
+          }).then( (res) => {
+            this.recomInfo = this.recomInfo.concat(res.data)
+          })
+        }
 	    }
 	}
 	
@@ -298,29 +298,53 @@
       color: #999;
       font-size: 12px;
     }
-    .hot-news-list{
+    .new-news-list{
       overflow: hidden;
     }
-    .hot-news-list li {
+    .new-news-list li {
       width: 135px;
       float: left;
       margin: 20px 10px 0px 0;
     }
-    .hot-news-list li img{
+    .new-news-list li img{
       height: 84px;
       width: 100%;
       object-fit: cover;
     }
-    .hot-news-list li a{
+    .new-news-list li a{
       display: block;
       margin-top: 10px;
     }
-    .hot-news-list li a:hover{
+    .new-news-list li a:hover{
       color: #136fe1;
     }
-    .hot-news-list li:nth-of-type(2n){
+    .new-news-list li:nth-of-type(2n){
       margin-right: 0;
       margin-left: 10px;
+    }
+    .hot-news{
+      margin-bottom: 20px;
+    }
+    .hot-news-list {
+      margin-top: 20px;
+      position: relative;
+    }
+    .hot-news-list li img{
+      width: 290px;
+      height: 180px;
+      object-fit: cover;
+    }
+    .hot-news-list li .h-n-item{
+      font-size: 13px;
+      line-height: 20px;
+      color: #fff;
+      background: rgba(0,0,0, .5);
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      z-index: 0;
+      width: 100%;
+      padding: 15px 20px;
     }
 	/* 推荐资讯部分结束 */
 </style>

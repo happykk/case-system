@@ -1,51 +1,33 @@
 <template>
 	<section class="cotainer">
 		<!-- 面包屑部分 -->
-		<div id="bread-nav">
-			<div class="brand-nav-box clearfix">
-				<div class="brand-nav-content">
-					<div class="brand-nav-title"><span>当前位置:</span></div>
-					<div class="brand-nav-list">
-						<ul>
-							<li><nuxt-link target="_blank" to="/">首页</nuxt-link></li>
-							<li>></li>
-							<li class="brand-nav-products"><nuxt-link target="_blank" to="/news">新闻中心</nuxt-link></li>
-							<li>></li>
-							<li class="brand-nav-prod-list">详情</li>
-							<!-- <li class="brand-nav-prod-list" v-for="(item,index) in $store.state.headNewsNav" :key="item.articleCategoryId" v-if=" (index + 1) == $route.query.category">
-								<nuxt-link target="_blank" :to="{name: 'news-category',params: {category: item.articleCategoryId}}">{{item.articleCategoryName}}</nuxt-link>
-							</li> -->
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
+		<BreadCrumbs :list="titles"></BreadCrumbs>
 		<!-- 面包屑部分结束 -->
 		<!-- News View details start-->
 		<div id="news-view">
 			<div class="news-view-box">
 				<div class="news-view-details-wrap">
 					<div class="news-view-title-box">
-						<div class="news-view-title"><h1>{{articleData.articleName}}</h1></div>
+						<div class="news-view-title"><h1>{{articleData.title}}</h1></div>
 						<div class="news-view-info">
-							<div class="news-view-sort">
+							<!-- <div class="news-view-sort">
 								<span class="news-view-info-title">分类:</span>
 								<span class="news-view-sort-cont">{{articleData.articleCategory.articleCategoryName}}</span>
 							</div>
 							<div class="news-view-access">
 								<span class="news-view-info-title">访问:</span>
 								<span class="news-view-access-cont">{{articleData.pageViews.pageViewsCount}}</span>
-							</div>
+							</div> -->
 							<div class="news-view-time">
 								<span class="news-view-info-title">发布:</span>
-								<span class="news-view-time-cont">{{articleData.articleAddTime}}</span>
+								<span class="news-view-time-cont">{{articleData.create_time}}</span>
 							</div>
 						</div>
 					</div>
-					<div class="news-view-details" v-html="articleData.articleText">
+					<div class="news-view-details" v-html="articleData.content">
 					</div>
 				</div>
-				<div class="news-view-other" v-if="preNextData.length == 1">
+				<!-- <div class="news-view-other" v-if="preNextData.length == 1">
 					<div class="news-view-prev" v-if="preNextData[0].articleId < this.$route.params.id">
 						<nuxt-link :to="{name:'news-newsView-id',params:{id:preNextData[0].articleId},query: {category:preNextData[0].articleCategoryId}}">
 							<span>上一篇:</span>
@@ -82,132 +64,56 @@
 							<a href="javascript:viod(0);">{{articleData.labelList[1].articleLabelName}}</a>
 						</div>
 					</div>
-					<!-- <div class="news-view-share">
-						<div class="bdsharebuttonbox">
-							<a href="#" class="bds_more" data-cmd="more"></a>
-							<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-							<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
-							<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
-							<a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
-						</div>
-					</div> -->
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<!-- News Views details end-->
-
-		<!-- Related Article Start-->
-		<!-- <div id="related-article">
-			<div class="related-article-box">
-				<div class="related-article-title">
-					<p>相关文章</p>
-				</div>
-				<div class="related-article-list-box">
-					<div class="related-article-left">
-						<ul>
-							<li class="related-article-list" v-for="(list,index) in relatedArticleData" :key="list.articleId" v-if="index<4">
-		        				<div class="related-article-list-title">
-		        		            <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}">{{list.articleName}}</nuxt-link>
-		        				</div>
-        					</li>
-						</ul>
-					</div>
-					<div class="related-article-right">
-						<ul>
-							<li class="related-article-list" v-for="(list,index) in relatedArticleData" :key="list.articleId" v-if="index>3">
-		        				<div class="related-article-list-title">
-		        		            <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}">{{list.articleName}}</nuxt-link>
-		        				</div>
-        					</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div> -->
-		<!-- Related Article End-->
-
-		<!-- Latest Articles start-->
-		<!-- <div id="latest-article">
-			<div class="latest-article-box">
-				<div class="latest-article-title">
-					<p>最新文章</p>
-				</div>
-				<div class="latest-article-list-box">
-					<ul>
-						<li class="latest-article-list" v-for="list in latestArticleData" :key="list.articleId">
-	        				<div class="latest-article-list-title">
-	        		            <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}">{{list.articleName}}</nuxt-link>
-	        				</div>
-	        			</li>
-					</ul>
-				</div>
-			</div>
-		</div> -->
-		<!-- Latest Articles end-->
-
-		<!-- Love Products Start-->
-		<!-- <div id="love-products">
-			<div class="love-products-box">
-				<div class="love-products-title">
-					<p>猜你喜欢</p>
-				</div>
-				<div class="love-products-list-box">
-					<ul>
-						<li class="love-products-list" v-for="list in loveArticleData" :key="list.articleId">
-	        				<div class="love-products-list-img">
-	        					<nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}">
-									<img :src="list.articleImg.articleImgSrc" :alt="list.articleImg.articleImgAlt">
-								</nuxt-link>
-	        				</div>
-	        				<div class="love-products-list-title">
-	        		            <nuxt-link target="_blank"  :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}">{{list.articleName}}</nuxt-link>
-	        				</div>
-	        			</li>
-					</ul>
-				</div>
-			</div>
-		</div> -->
-		<!-- Love Products End-->
 	</section>
 </template>
 
 <script>
 	import axios from 'axios'
+	import BreadCrumbs from '~/components/common/breadCrumbs'
+
 	export default {
 		data (){
 			return {
+				titles: [
+					{
+						title: '网站首页',
+						link: '/'
+					},
+					{
+						title: '新闻资讯',
+						link: '/news'
+					},
+					{
+						title: '详情',
+						link: ''
+					}
+				],
 			}
 		},
-		validate({ params }) {
-	        return /^\d+$/.test(params.id)
-	    },
+		components: {
+			BreadCrumbs
+		},
 		async asyncData ({params,query,store}){
 			let id = params.id;
-			let parId = query.category;
 	    	//详情数据
-	    	let articleData = await axios.get(`${store.state.wordpressAPI}/article/getArticleDetails/${id}`);
+	    	let articleData = await axios.get(`${process.env.BASE_URL}/api/article/text?id=${id}`);
 	    	//上下篇数据
-	    	let preNextData = await axios.get(`${store.state.wordpressAPI}/article/getArticleNextAndBefore/${parId}/${id}`);
-	    	//相关文章
-	    	let relatedArticleData = await axios.get(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/${parId}/8`);
-	    	//最新文章
-	    	let latestArticleData = await axios.get(`${store.state.wordpressAPI}/article/getArticleNew/6`);
-	    	//猜你喜欢
-	    	let loveArticleData = await axios.get(`${store.state.wordpressAPI}/article/getArticleRandom`);
+	    	// let preNextData = await axios.get(`${store.state.wordpressAPI}/article/getArticleNextAndBefore/${parId}/${id}`);
 
 	    	return {
-	    		articleData: articleData.data,
-	    		preNextData: preNextData.data.list,
-	    		relatedArticleData: relatedArticleData.data,
-	    		latestArticleData: latestArticleData.data,
-	    		loveArticleData: loveArticleData.data
+	    		articleData: articleData.data.data,
+	    		// preNextData: preNextData.data.list,
 	    	}
 		},
 		head (){
 			return {
-				title: this.articleData.articleMetaTitle,
+				title: this.articleData.title,
 				meta: [
-					{name: 'keywords',hid: 'keywords',content: `${this.articleData.articleKeyWord}`},
+					{name: 'keywords',hid: 'keywords',content: `${this.articleData.title}`},
 					{name: 'description',hid: 'description',content: `${this.articleData.articleMetaDescription}`}
 				]
 			}

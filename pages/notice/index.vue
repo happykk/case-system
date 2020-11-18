@@ -5,11 +5,11 @@
 		<!-- 面包屑部分结束 -->
     <div class="news-main">
       <ul class="recom-info-content">
-        <li class="recom-info-list" v-for="(list) in recomInfo" :key="list.articleId">
-          <nuxt-link target="_blank" class="recom-info-title" :to="{name: 'news-newsView-id',params:{id:list.articleId},query: {category: list.articleCategoryId}}">
+        <li class="recom-info-list" v-for="(list) in recomInfo" :key="list.id">
+          <nuxt-link target="_blank" class="recom-info-title" :to="{name: 'news-newsView-id',params:{id:list.id}}">
             <i></i>
-            <h2>{{list.articleName}}</h2>
-            <span class="recom-info-times">{{list.articleAddTime.split(' ')[0]}}</span>
+            <h2>{{list.title}}</h2>
+            <span class="recom-info-times">{{list.update_time.split(' ')[0]}}</span>
           </nuxt-link>
         </li>
       </ul>
@@ -58,30 +58,11 @@
 			//head信息
 		    let metaData = await axios(`${store.state.wordpressAPI}/NavigationMeta/get/12`);
 			//推荐资讯
-	        let recomData = await axios(`${store.state.wordpressAPI}/article/getArticleCenterRecommends`);
-	        //公司资讯
-	        let companyData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/1/5`);
-
-	        //行业资讯
-	        let industryData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/5/5`);
-	        //家具百科
-	        let furnitureData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/2/5`);
-
-	        //品牌选购
-	        let brandData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/3/5`);
-
-	        //装修摆放
-	        let decorationData = await axios(`${store.state.wordpressAPI}/article/getRecommendsByCategoryId/4/12`);
-	        return {
-	        	metaData: metaData.data,
-	        	recomInfo: recomData.data,
-	        	companyInfo: companyData.data,
-	        	industryInfo: industryData.data,
-	        	furnitureInfo: furnitureData.data,
-	        	brandInfo: brandData.data,
-	        	decorationInfo: decorationData.data
-	        }
-
+        let recomData = await axios(`${process.env.BASE_URL}/api/article/list?type=2&page_no=1&page_size=3`);
+        return {
+          metaData: metaData.data,
+          recomInfo: recomData.data.data,
+        }
 	    },
 	    methods: {
 	    	getTxt (str,index,num1=136,num2=42){

@@ -10,23 +10,22 @@
           </div>
           <div class="lists">
             <div v-for="(item, index) in newsData" :key="index" :class="{'special': index==0}">
-              <!-- <nuxt-link target="_blank" 
-                :to="{name: 'news-newsView-id',params:{id:item.articleId},query: {category: item.articleCategoryId}}">
-                <h2>{{item.title}}</h2>
-              </nuxt-link> -->
-              <div class="list">
-                <img :src="item.img ? 'http://81.71.142.158/static/image/'+item.img : defaultImg">
-                <div class="list-msg">
-                  <div class="list-title ellipsis">
-                    {{ item.title }}
-                    <span v-if="index>0" class="fr time">{{item.update_time.split(' ')[0]}}</span>
-                  </div>
-                  <div class="list-info">
-                    <p>{{item.desc}}</p>
-                    <a v-if="index==0" class="view-all fr" href="#">[查看全文]</a>
+              <nuxt-link target="_blank" 
+                :to="{name: 'news-newsView-id',params:{id:item.id}}">
+                <div class="list">
+                  <img :src="item.img ? 'http://81.71.142.158/static/image/'+item.img : defaultImg">
+                  <div class="list-msg">
+                    <div class="list-title ellipsis">
+                      {{ item.title }}
+                      <span v-if="index>0" class="fr time">{{item.update_time.split(' ')[0]}}</span>
+                    </div>
+                    <div class="list-info">
+                      <p>{{item.desc}}</p>
+                      <a v-if="index==0" class="view-all fr" href="#">[查看全文]</a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -34,10 +33,16 @@
           <div class="notice">
             <div class="header-title">
               <span class="fl">通知公告</span>
-              <router-link to="professors" class="fr">MORE ></router-link>
+              <router-link to="notice" class="fr">MORE ></router-link>
             </div>
             <ul class="notice-lists">
-              <li v-for="(item,index) in noticeData" :key="index">{{item.title}}</li>
+              <li v-for="(item,index) in noticeData" :key="index">
+                <router-link
+                  target="_blank" 
+                  :to="{name: 'news-newsView-id',params:{id:item.id}}">
+                    {{item.title}}
+                  </router-link>
+              </li>
             </ul>
           </div>
           <div class="quick-entry">
@@ -397,7 +402,19 @@ li.news-kind.active, .news-kind:hover{
   height:  auto;
   padding-top: 70px;
 }
-
-
 /* 新闻资讯部分结束 */
+.recom-info-img img {
+  object-fit: cover;
+  width:  100%;
+  height:  100%;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.recom-info-img img:hover {
+    -webkit-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  transform: scale(1.2);
+}
 </style>
