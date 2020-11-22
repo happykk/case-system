@@ -5,7 +5,8 @@
         <div class="i-h-top">
           <div class="t-m-login">
             <i class="el-icon-user-solid"></i>
-            <router-link to="/login">请登录</router-link>
+            <router-link to="/login" v-if="!userName">请登录</router-link>
+            <span>{{userName}}</span>
           </div>
         </div>
         <div class="i-h-logo">
@@ -73,7 +74,8 @@
           }
         ],
         activeIndex: 0,
-        searchVal: ''
+        searchVal: '',
+        userName: '孙佳'
 			}
 		},
 		computed: {
@@ -155,8 +157,11 @@
   
   .i-h-nav {
     height: 40px;
-    background-color: rgba(46,46,48,.5);
+    background-color: #136fe1;
     box-shadow: 0 4px 4px 0 rgba(19, 59, 40, 0.25);
+  }
+  .i-h-nav.home{
+    background-color:rgba(46,46,48,.5);
   }
   .i-h-nav .center {
     width: 1200px;

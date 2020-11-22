@@ -16,7 +16,14 @@ import {
   Pagination,
   Select,
   Option,
-  DatePicker
+  DatePicker,
+  Message,
+  Dialog,
+  Row,
+  Col,
+  Steps,
+  Step,
+  Upload
 } from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 
@@ -37,7 +44,14 @@ const components = [
   Pagination,
   Select,
   Option,
-  DatePicker
+  DatePicker,
+  Message,
+  Dialog,
+  Row,
+  Col,
+  Steps,
+  Step,
+  Upload,
 ];
 
 const Element = {
@@ -47,5 +61,5 @@ const Element = {
     })
   }
 }
-
+Vue.prototype.$message = Message
 Vue.use(Element, { locale })

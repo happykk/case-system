@@ -106,7 +106,7 @@ module.exports = {
       // .then(res => res.data.map(
       //   newsView => '/news/newsView/' + newsView.articleId + '?category=' + newsView.category
       // ))
-      // , '@/plugins/axios'
+      // 
       // package.json
       // "dev": "nuxt",
     // "build": "nuxt build",
@@ -114,7 +114,7 @@ module.exports = {
     // "generate": "nuxt generate",
     }
   },
-  plugins: ["@/plugins/element-ui"],
+  plugins: ["@/plugins/element-ui", '@/plugins/axios'],
   env: {
     BASE_URL: process.env.BASE_URL,
     NODE_ENV: process.env.NODE_ENV

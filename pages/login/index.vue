@@ -8,12 +8,14 @@
         <el-form-item prop="password">
           <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item prop='validateCode'>
-          <reCaptcha :sitekey="sitekey" @getValidateCode='getValidateCode' v-model="loginForm.validateCode"></reCaptcha>
+        <el-form-item prop='check'>
+          <reCaptcha :sitekey="sitekey" @getValidateCode='getValidateCode' v-model="loginForm.check"></reCaptcha>
          <!-- <vue-recaptcha :sitekey="sitekey" :loadRecaptchaScript="true"></vue-recaptcha> -->
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('loginForm')">提交</el-button>
+          <el-button >注册</el-button>
+          <span class="forget" @click="toUpdatePass">忘记密码？</span>
         </el-form-item>
       </el-form>
     </div>
@@ -22,6 +24,8 @@
 <script>
 import axios from 'axios'
 import reCaptcha from './reCaptcha'
+import {getCookieInClient} from '../../utils/assist'
+import md5 from 'js-md5'
 // import VueRecaptcha from 'vue-recaptcha';
 export default {
   // 下面的两种方式都可以；layout属性其实是将这个vue页面跟布局vue进行关联的属性，layout的值为layout文件夹下所对应布局的名字
@@ -49,10 +53,9 @@ export default {
       loginForm: {
         username: '',
         password: '',
-        redomStr: '',
-        validateCode: false
+        check: ''
       },
-      sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+      sitekey: '6LeOsOQZAAAAAEgZzkD2ZE6kuR0vOFE8F2KqZB4x',
       rules: {
         username: [
           { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -61,30 +64,46 @@ export default {
         password: [
           { validator: validatePass, trigger: 'blur' }
         ],
-        validateCode: [
+        check: [
           { validator: checkCode, trigger: 'change' }
         ]
       }
     }
   },
   methods: {
-    callBack (res) {
-      console.log(res)
-    },
     getValidateCode(value) {
-      this.loginForm.validateCode = value
-      console.log(value)
+      this.loginForm.check = value
     },
     submitForm () {
-      // 405925123@qq.com 824655qqq
       this.$refs.loginForm.validate((valid) => {
+        let password = md5(this.loginForm.password)
+        console.log(this.loginForm.password)
+        let params = Object.assign({}, this.loginForm, {password: password})
         if (valid) {
-          axios('http://106.52.85.160/api/login', this.loginForm).then((data) => {
-            this.$router.back()
+          this.$ajax.post(`/api/login`, params).then((data) => {
+            if (data) {
+              this.$router.push('/personal')
+            }
           })
         }
       })
-     
+    },
+    getUserInfo () {
+      let _xsrfList = getCookieInClient('_xsrf')
+      let _xsrf = window.atob(_xsrfList.split('|')[0])
+      this.$ajax.get('/api/user/info',{_xsrf: _xsrf}).then((res) => {
+        if (data.code===0) {
+          sessionStorage.setItem('')
+        }
+      })
+    },
+    toUpdatePass () {
+      this.$router.push({
+        path: '/login/upDatePass',
+        query: {
+          type: 1
+        }
+      })
     }
   },
   mounted () {
@@ -116,5 +135,11 @@ export default {
 .el-form .el-input__inner{
   background-color: transparent;
   color: rgba(0, 0, 0, 0.87);
+}
+.forget{
+  cursor: pointer;
+  float: right;
+  font-size: 12px;
+  color: #136fe1;
 }
 </style>

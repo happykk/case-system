@@ -3,7 +3,6 @@ import axios from 'axios'
 import querystring from 'querystring'
 import { Message } from "element-ui";
 // axios.defaults.withCredentials = true
-axios.defaults.baseURL='http://106.52.85.160'
 var ajaxFun = function (type, url, data) {
   data = data || {}
   if (type === 'post') {
@@ -55,20 +54,13 @@ interceptors.response.use(
       Message.error('接口格式错误')
       return Promise.resolve(false)
     } else if (response.data) {
-        // 10003  10004 10005  转跳登录页
-        // 10013 转跳修改密码页
-      if (response.data.code === 10003 || response.data.code === 10004 || response.data.code === 10005) {
-        $nuxt.$router.push({
-          path: "/login"
-        })
-        return Promise.resolve(false)
-      } else if (response.data.code === 10013) {
-        $nuxt.$router.push({
-          path: '/login/upDatePass',
-          query: {
-            type: 1
-          }
-        })
+      if (response.data.code === 100000) {
+        store.dispatch("fedLogout").then(() => {
+          Message.error("验证失败,请重新登录");
+          router.push({
+            path: "/login"
+          });
+        });
         return Promise.resolve(false)
       } else if (Number(response.data.code) !== 0) {
         if (response.data.msg && response.data.msg.length !== 0) {
@@ -90,7 +82,9 @@ interceptors.response.use(
     Promise.resolve(false)
   }
 )
-
+var setOpt = function (opt) {
+  Object.assign(axios.defaults, opt)
+}
 export default ({ app }, inject) => {
   inject('ajax', ajax)
 }
@@ -107,3 +101,9 @@ export default ({ app }, inject) => {
 // this.$request.post('login_URL', {}).then((data) => {
 //   console.log(data)
 // })
+// export {
+//   ajax,
+//   axios,
+//   interceptors,
+//   setOpt
+// }

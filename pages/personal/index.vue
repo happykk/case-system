@@ -1,20 +1,7 @@
 <template>
   <section>
     <!-- 面包屑部分 -->
-    <div id="bread-nav">
-      <div class="brand-nav-box clearfix">
-        <div class="brand-nav-content">
-          <div class="brand-nav-title"><span>当前位置:</span></div>
-          <div class="brand-nav-list">
-            <ul>
-              <li><nuxt-link target="_blank" to="/">首页</nuxt-link></li>
-              <li>></li>
-              <li class="brand-nav-products"><nuxt-link target="_blank" to="/news">个人中心</nuxt-link></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- <BreadCrumbs :list="titles"></BreadCrumbs> -->
     <!-- 面包屑部分结束 -->
     <div class="personal-main">
       <div class="left-menu">
@@ -23,20 +10,21 @@
             <img src="~/assets/images/personal/head-pic.png" >
           </div>
           <div class="presonal-info">
-            <span class="author-name">肥佳ss</span>
+            <span class="author-name">{{userInfo.Name}}</span>
           </div>
           <div class="position-info">
-            <span>北京&nbsp;| 网页设计师</span>
+            <span>{{userInfo.RoleId?'老师':'学生'}}&nbsp;| {{userInfo.CompanyName}}</span>
           </div>
         </div>
         <div class="personal-menu">
           <ul class="menu-list">
-            <li class="menu-list-default current">
-              <i></i><span>账号安全</span></li>
-            <li class="menu-list-default ">
-              <i></i><span>我的收藏</span></li>
-            <li class="menu-list-default ">
-              <i></i><span>我的团体</span></li>
+            <li v-for="(item, index) in tabs"
+              @click="changeTab(index)"
+              :key="index"
+              class="menu-list-default"
+              :class="{'current': currentTab===index}">
+              <i></i><span>{{item}}</span>
+            </li>
           </ul>
         </div>
         <div class="manage-entry">
@@ -45,26 +33,64 @@
       </div>
       <div class="right-content">
         <div class="bg-box-radius">
-          <div class="account-num-box">
-            <p class="first-line">
-              <span class="account-title">用户名</span><span class="account-tips-text"><span>肥佳ss</span>
-                </span>
-                <a href="#" class="btn-default-main">修改</a>
-            </p>
-            <p>
-              <span class="account-title">邮箱帐号</span><span class="account-tips-text"><span>1149116001@qq.com</span></span>
-              <a href="#" class="btn-default-main">绑定</a>
-            </p>
-            <p>
-              <span class="account-title">登录密码</span><span class="account-tips-text two-line-txt">密码要求至少包含字母，符号或数字中的两项且长度超过8位，建议您经常修改密码，以保证帐号更加安全。</span>
-              <a href="#" id="modifysafepwd" class="btn-default-main">修改</a>
-            </p>
-          </div>
+          <upDateInfo v-if="currentTab===0" :data="userInfo"></upDateInfo>
+          <caseInfo v-if="currentTab===1"></caseInfo>
+          <creatCase v-if="currentTab===2"></creatCase>
         </div>
       </div>
     </div>
   </section>
 </template>
+<script>
+import {getCookieInClient} from '../../utils/assist'
+import upDateInfo from './upDateInfo'
+import caseInfo from './caseInfo'
+import creatCase from './creatCase'
+export default {
+  data (){
+    return{
+      currentTab: 0,
+      tabs: ['账号安全', '我的案例', '上传案例'],
+      userInfo: {
+        Name: '',
+        RoleId: '',
+        CompanyName: ''
+      }
+    }
+  },
+  components: {
+    upDateInfo,
+    caseInfo,
+    creatCase
+  },
+  head () {
+    return {
+      title: '个人中心'
+    }
+  },
+  async asyncData(context){
+    // let _xsrfList = getCookieInClient('_xsrf')
+    // let xsrf = window.atob(_xsrfList.split('|')[0])
+    // let userData = await context.app.$ajax.get('/api/user/info')
+    // return {
+    //   userInfo: userData.data
+    // }
+  },
+  methods: {
+    changeTab (index) {
+      this.currentTab = index
+    }
+  },
+  mounted () {
+    let _xsrfList = getCookieInClient('_xsrf')
+    let xsrf = window.atob(_xsrfList.split('|')[0])
+    this.$ajax.get('/api/user/info', {xsrf: xsrf}).then((res) => {
+      this.userInfo = res.data
+      // sessionStorage.setItem('user', res.data.Name)
+    })
+  }
+}
+</script>
 
 <style scoped>
 	/*面包屑部分*/
@@ -120,7 +146,7 @@
     overflow:  hidden;
     width:  1200px;
     height:  auto;
-    margin:  0 auto;
+    margin:  20px auto 0;
     overflow: hidden;
   }
   .left-menu{
@@ -161,9 +187,14 @@
     text-overflow: ellipsis;
     overflow: hidden;
   }
-   .personal-menu .menu-list li {
+  .personal-menu .menu-list li {
     background: #fff;
     position: relative;
+    cursor: pointer;
+  }
+  .personal-menu .menu-list li:hover{
+    background: #136fe1;
+    color: #fff;
   }
   .personal-menu .menu-list .menu-list-default.current i {
     display: inline-block;
@@ -250,5 +281,9 @@
     border-radius: 4px;
     cursor: pointer;
     text-align: center;
+  }
+  .form-box{
+    width: 350px;
+    margin: 0 auto;
   }
   </style>

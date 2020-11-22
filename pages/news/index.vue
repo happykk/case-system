@@ -14,7 +14,7 @@
             <div class="recom-info-box">
               <div class="recom-info-img">
                 <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}">
-                  <img :src="'http://81.71.142.158/static/image/'+list.img">
+                  <img :src="'http://106.52.85.160/static/image/'+list.img">
                 </nuxt-link>
                 <div class="recom-info-times">
                   <span><font class="dd" id="dd-1">{{list.update_time.split(' ')[0].split('-')[2]}}</font></span>
@@ -42,16 +42,21 @@
             <span class="text">精彩新闻</span>
             <span class="more">更多 ›</span>
           </h2>
-          <ul class="hot-news-list">
-            <li>
-              <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:recomInfo[0].id}}">
-                <img :src="'http://81.71.142.158/static/image/'+recomInfo[0].img" alt="">
+          <el-carousel
+            class="hot-news-list"
+            trigger="click"
+            indicator-position="outside"
+            height="180px"
+            :autoplay="false">
+            <el-carousel-item v-for="item in newNes" :key="item.id">
+              <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.id}}">
+                <img :src="'http://106.52.85.160/static/image/'+item.img" alt="">
                 <div class="h-n-item">
-                  {{recomInfo[0].title}}
+                  {{item.title}}
                 </div>
               </nuxt-link>
-            </li>
-          </ul>
+            </el-carousel-item>
+          </el-carousel>
         </div>
         <div class="mod">
           <h2 class="mod-title">
@@ -60,8 +65,8 @@
             <span class="more">更多 ›</span>
           </h2>
           <ul class="new-news-list">
-            <li v-for="item in recomInfo.slice(0,2)" :key="item.id">
-              <img :src="'http://81.71.142.158/static/image/'+item.img" alt="">
+            <li v-for="item in hotNews" :key="item.id">
+              <img :src="'http://106.52.85.160/static/image/'+item.img" alt="">
               <div>
                 <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.id}}">{{item.title}}</nuxt-link>
               </div>
@@ -91,7 +96,7 @@
           },
         ],
         formData: {
-          type: 2,
+          type: 1,
           page_no: 1,
           page_size: 10
         },
@@ -103,39 +108,44 @@
 		},
 		head () {
 		  return {
-		    title:this.metaData.navigationTitle,
+		    title:'新闻中心',
 		    meta: [
-		      {name:'keywords',hid: 'keywords',content:`${this.metaData.navigationKeyword}`},
-		      {name:'description',hid:'description',content:`${this.metaData.navigationDescription}`}
+		      {name:'keywords',hid: 'keywords',content:`新闻中心`},
+		      {name:'description',hid:'description',content:`新闻中心`}
 		    ]
 		  }
 		},
-		async asyncData({params,store}){
-			//head信息
-		    let metaData = await axios(`${store.state.wordpressAPI}/NavigationMeta/get/12`);
+		async asyncData(context){
 			//推荐资讯
-        let recomData = await axios(`${process.env.BASE_URL}/api/article/list?type=1&page_no=1&page_size=3`);
-        return {
-          metaData: metaData.data,
-          recomInfo: recomData.data.data,
-        }
-	    },
-	    methods: {
-	    	handleCurrentChange(){
-
-        },
-	    	getData(){
-          axios(`${process.env.BASE_URL}/api/article/list`,{
-            params: this.formData
-          }).then( (res) => {
-            this.recomInfo = this.recomInfo.concat(res.data)
-          })
-        }
-	    }
+      let recomData = await context.app.$ajax.get('/api/article/list?type=1&page_no=1&page_size=3')
+      let hotDatas = await context.app.$ajax.get('/api/article/hot')
+      let newDatas = await context.app.$ajax.get('/api/article/new')
+      return {
+        recomInfo: recomData.data.list,
+        hotNews: hotDatas.data,
+        newNes: newDatas.data
+      }
+    },
+    methods: {
+      handleCurrentChange(val){
+        this.getData()
+      },
+      getData(){
+        axios(`${process.env.BASE_URL}/api/article/list`,{
+          params: this.formData
+        }).then( (res) => {
+          this.recomInfo = this.recomInfo.concat(res.data)
+        })
+      }
+    }
 	}
 	
 </script>
-
+<style >
+.hot-news-list .el-carousel__indicator.is-active button{
+  background-color: #136fe1;
+}
+</style>
 <style scoped>
 	/* 推荐资讯部分 */
 		.news-main {
@@ -312,8 +322,14 @@
       object-fit: cover;
     }
     .new-news-list li a{
-      display: block;
       margin-top: 10px;
+      display: -webkit-box;
+      /* autoprefixer: off */
+      -webkit-box-orient: vertical;
+      /* autoprefixer: on */
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+
     }
     .new-news-list li a:hover{
       color: #136fe1;
@@ -329,12 +345,12 @@
       margin-top: 20px;
       position: relative;
     }
-    .hot-news-list li img{
+    .hot-news-list img{
       width: 290px;
       height: 180px;
       object-fit: cover;
     }
-    .hot-news-list li .h-n-item{
+    .hot-news-list .h-n-item{
       font-size: 13px;
       line-height: 20px;
       color: #fff;
@@ -344,7 +360,14 @@
       bottom: 0;
       z-index: 0;
       width: 100%;
-      padding: 15px 20px;
+      padding: 4px 15px;
+      display: -webkit-box;
+      /* autoprefixer: off */
+      -webkit-box-orient: vertical;
+      /* autoprefixer: on */
+      -webkit-line-clamp: 2;
+      overflow: hidden;
     }
+    
 	/* 推荐资讯部分结束 */
 </style>

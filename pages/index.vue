@@ -13,7 +13,7 @@
               <nuxt-link target="_blank" 
                 :to="{name: 'news-newsView-id',params:{id:item.id}}">
                 <div class="list">
-                  <img :src="item.img ? 'http://81.71.142.158/static/image/'+item.img : defaultImg">
+                  <img :src="item.img ? 'http://106.52.85.160/static/image/'+item.img : defaultImg">
                   <div class="list-msg">
                     <div class="list-title ellipsis">
                       {{ item.title }}
@@ -123,7 +123,7 @@
         ]
       }
     },
-    async asyncData({params,store}){
+    async asyncData(context){
       //首页head信息
       let metaData = {
         navigationTitle: '湖南省研究生会计专业案例库',
@@ -131,15 +131,15 @@
         navigationDescription: '湖南省研究生会计专业案例库'
       };
       //banner数据动态获取
-      let banner = await axios(`${process.env.BASE_URL}/api/rotation_chart`)
+      let banner = await context.app.$ajax.get('/api/rotation_chart')
       //首页通知信息
-      let notice = await axios(`${process.env.BASE_URL}/api/article/list?type=2&page_no=1&page_size=6`)
-      let news = await axios(`${process.env.BASE_URL}/api/article/list?type=1&page_no=1&page_size=3`)
+      let notice = await context.app.$ajax.get(`/api/article/list?type=2&page_no=1&page_size=6`)
+      let news = await context.app.$ajax.get(`/api/article/list?type=1&page_no=1&page_size=3`)
       return {
         metaData: metaData,
-        bannerData: banner.data.data,
-        noticeData: notice.data.data,
-        newsData: news.data.data
+        bannerData: banner.data,
+        noticeData: notice.data.list,
+        newsData: news.data.list
       }
     },
     methods: {

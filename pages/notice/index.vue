@@ -17,7 +17,8 @@
         background
         style="text-align: center;"
         layout="prev, pager, next"
-        :total="1000">
+        @current-change="handleCurrentChange"
+        :total="total">
       </el-pagination>
     </div>
 	</section>
@@ -39,7 +40,13 @@
             title: '通知公告',
             link: '/notice'
           },
-        ]
+        ],
+        formData: {
+          type: 2,
+          page_no: 1,
+          page_size: 10
+        },
+        total: 0
       }
 		},
 		components: {
@@ -47,21 +54,14 @@
 		},
 		head () {
 		  return {
-		    title:this.metaData.navigationTitle,
-		    meta: [
-		      {name:'keywords',hid: 'keywords',content:`${this.metaData.navigationKeyword}`},
-		      {name:'description',hid:'description',content:`${this.metaData.navigationDescription}`}
-		    ]
+		    title:'通知公告'
 		  }
 		},
-		async asyncData({params,store}){
-			//head信息
-		    let metaData = await axios(`${store.state.wordpressAPI}/NavigationMeta/get/12`);
+		async asyncData(context){
 			//推荐资讯
-        let recomData = await axios(`${process.env.BASE_URL}/api/article/list?type=2&page_no=1&page_size=3`);
+        let recomData = await context.app.$ajax.get(`/api/article/list?type=2&page_no=1&page_size=3`);
         return {
-          metaData: metaData.data,
-          recomInfo: recomData.data.data,
+          recomInfo: recomData.data.list,
         }
 	    },
 	    methods: {
@@ -78,8 +78,18 @@
 	    	getTime(time){
 				var time = time.slice(5, 10);
 				return time;
-			}
-	    }
+      },
+      handleCurrentChange(val){
+        this.getData()
+      },
+      getData(){
+        axios(`${process.env.BASE_URL}/api/article/list`,{
+          params: this.formData
+        }).then( (res) => {
+          this.recomInfo = this.recomInfo.concat(res.data)
+        })
+      }
+    }
 	}
 	
 </script>
