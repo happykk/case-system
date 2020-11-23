@@ -8,6 +8,7 @@
         action=""
         :with-credentials="true"
         :http-request="httpRequestText"
+        :on-remove="handleRemoveText"
         :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <div slot="tip" class="el-upload__tip" style="display: inline-block;margin-left: 20px">请上传pdf格式文件,文件大小不能超过20Mb</div>
@@ -21,6 +22,7 @@
         action=""
         :with-credentials="true"
         :http-request="httpRequestDesc"
+        :on-remove="handleRemoveDesc"
         :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <div slot="tip" class="el-upload__tip" style="display: inline-block;margin-left: 20px">请上传pdf格式文件,文件大小不能超过20Mb</div>
@@ -52,6 +54,12 @@ export default {
     httpRequestDesc (param) {
       this.formData.append('desc_pdf',param.file)
     },
+    handleRemoveText (file, fileList) {
+      this.formData.delete('text_pdf')
+    },
+    handleRemoveDesc (file, fileList) {
+      this.formData.delete('desc_pdf')
+    },
     submit () {
       // if (this.formEntity.text_pdf.length<1) {
       //   this.$message.warning('请添加案例正文')
@@ -65,8 +73,7 @@ export default {
       
       axios.post(`${process.env.BASE_URL}/api/case/case_upload`, this.formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-          'Expect': '100-continue'
+          'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
         if (res.code === 0) {

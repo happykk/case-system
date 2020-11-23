@@ -75,6 +75,7 @@ export default {
         applicable_object: "",
         applicable_courses: ""
       },
+      xsrfList: '',
       formRules: {
         case_name: [
           { required: true, message: "请输入案例名", trigger: "blur"}
@@ -118,6 +119,7 @@ export default {
     submit () {
       let {case_name, cat_id, author, author_company, director_name, translator_name, language, chinese_keyword, english_keyword, summary, english_summary, applicable_object, applicable_courses} = this.editInfo
       let params = {case_name, cat_id, author, author_company, director_name, translator_name, language, chinese_keyword, english_keyword, summary, english_summary, applicable_object, applicable_courses}
+      params._xsrf = this.xsrf
       this.$ajax.get('/api/case/case_base', params).then((res) => {
         if (res.code === 0) {
           sessionStorage.setItem('caseKey', res.data)
@@ -133,9 +135,9 @@ export default {
   },
   created () {
     let _xsrfList = getCookieInClient('_xsrf')
-    let xsrf = window.atob(_xsrfList.split('|')[0])
+    this.xsrf = window.atob(_xsrfList.split('|')[0])
     this.getCateList()
-    this.$ajax.get('/api/case/create', {_xsrf: xsrf}).then( res => {
+    this.$ajax.get('/api/case/create', {_xsrf: this.xsrf}).then( res => {
       this.editInfo = res.data
     })
   }

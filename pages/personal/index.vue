@@ -69,7 +69,7 @@ export default {
     }
   },
   async asyncData(context){
-    // let _xsrfList = getCookieInClient('_xsrf')
+    // let _xsrfList = getCookieInClient('_xsrf') 
     // let xsrf = window.atob(_xsrfList.split('|')[0])
     // let userData = await context.app.$ajax.get('/api/user/info')
     // return {
@@ -82,8 +82,11 @@ export default {
     }
   },
   mounted () {
-    let _xsrfList = getCookieInClient('_xsrf')
-    let xsrf = window.atob(_xsrfList.split('|')[0])
+    let xsrf
+    if (getCookieInClient('_xsrf')) {
+      let _xsrfList = getCookieInClient('_xsrf')
+      xsrf = window.atob(_xsrfList.split('|')[0])
+    }
     this.$ajax.get('/api/user/info', {xsrf: xsrf}).then((res) => {
       this.userInfo = res.data
       // sessionStorage.setItem('user', res.data.Name)
