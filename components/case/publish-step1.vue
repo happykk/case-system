@@ -134,10 +134,10 @@ export default {
     }
   },
   created () {
-    let _xsrfList = getCookieInClient('_xsrf')
-    this.xsrf = window.atob(_xsrfList.split('|')[0])
+    // let _xsrfList = getCookieInClient('_xsrf')
+    // this.xsrf = window.atob(_xsrfList.split('|')[0])
     this.getCateList()
-    this.$ajax.get('/api/case/create', {_xsrf: this.xsrf}).then( res => {
+    this.$ajax.get('/api/case/create').then( res => {
       this.editInfo = res.data
     })
   }

@@ -14,7 +14,7 @@
             <div class="recom-info-box">
               <div class="recom-info-img">
                 <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}">
-                  <img :src="'http://106.52.85.160/static/image/'+list.img">
+                  <img :src="'http://81.71.142.158/static/image/'+list.img">
                 </nuxt-link>
                 <div class="recom-info-times">
                   <span><font class="dd" id="dd-1">{{list.update_time.split(' ')[0].split('-')[2]}}</font></span>
@@ -50,7 +50,7 @@
             :autoplay="false">
             <el-carousel-item v-for="item in newNes" :key="item.id">
               <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.id}}">
-                <img :src="'http://106.52.85.160/static/image/'+item.img" alt="">
+                <img :src="'http://81.71.142.158/static/image/'+item.img" alt="">
                 <div class="h-n-item">
                   {{item.title}}
                 </div>
@@ -66,7 +66,7 @@
           </h2>
           <ul class="new-news-list">
             <li v-for="item in hotNews" :key="item.id">
-              <img :src="'http://106.52.85.160/static/image/'+item.img" alt="">
+              <img :src="'http://81.71.142.158/static/image/'+item.img" alt="">
               <div>
                 <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.id}}">{{item.title}}</nuxt-link>
               </div>

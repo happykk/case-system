@@ -1,6 +1,5 @@
 <template>
   <section class="container">
-      <!-- banner -->
       <VBanner :bannerData="bannerData"></VBanner>
       <div class="top-content">
         <div class="news">
@@ -10,22 +9,27 @@
           </div>
           <div class="lists">
             <div v-for="(item, index) in newsData" :key="index" :class="{'special': index==0}">
-              <nuxt-link target="_blank" 
-                :to="{name: 'news-newsView-id',params:{id:item.id}}">
-                <div class="list">
-                  <img :src="item.img ? 'http://106.52.85.160/static/image/'+item.img : defaultImg">
-                  <div class="list-msg">
-                    <div class="list-title ellipsis">
-                      {{ item.title }}
-                      <span v-if="index>0" class="fr time">{{item.update_time.split(' ')[0]}}</span>
-                    </div>
-                    <div class="list-info">
-                      <p>{{item.desc}}</p>
-                      <a v-if="index==0" class="view-all fr" href="#">[查看全文]</a>
-                    </div>
+              <div class="list">
+                <nuxt-link target="_blank" 
+                  :to="{name: 'news-newsView-id',params:{id:item.id}}">
+                  <img :src="item.img ? 'http://81.71.142.158/static/image/'+item.img : defaultImg">
+                </nuxt-link>
+                <div class="list-msg">
+                  <div class="list-title ellipsis">
+                    <nuxt-link target="_blank" 
+                  :to="{name: 'news-newsView-id',params:{id:item.id}}">{{ item.title }}</nuxt-link>
+                    <span v-if="index>0" class="fr time">{{item.update_time.split(' ')[0]}}</span>
+                  </div>
+                  <div class="list-info">
+                    <p>{{item.desc}}</p>
+                    <!-- <nuxt-link target="_blank" 
+                      :to="{name: 'news-newsView-id',params:{id:item.id}}">
+                    </nuxt-link> -->
+                    <a v-if="index==0" class="view-all fr" href="#">[查看全文]</a>
                   </div>
                 </div>
-              </nuxt-link>
+              </div>
+              
             </div>
           </div>
         </div>

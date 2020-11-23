@@ -19,11 +19,12 @@
         <div class="personal-menu">
           <ul class="menu-list">
             <li v-for="(item, index) in tabs"
-              @click="changeTab(index)"
               :key="index"
               class="menu-list-default"
               :class="{'current': currentTab===index}">
-              <i></i><span>{{item}}</span>
+              <nuxt-link :to="item.link">
+                <i></i><span>{{item.name}}</span>
+              </nuxt-link>
             </li>
           </ul>
         </div>
@@ -33,35 +34,139 @@
       </div>
       <div class="right-content">
         <div class="bg-box-radius">
-          <upDateInfo v-if="currentTab===0" :data="userInfo"></upDateInfo>
-          <caseInfo v-if="currentTab===1"></caseInfo>
-          <creatCase v-if="currentTab===2"></creatCase>
+          <div class="account-num-box">
+            <p class="first-line">
+              <span class="account-title">电话</span>
+              <span class="account-tips-text">
+                <span>{{userInfo.Phone}}</span>
+              </span>
+              <a href="#" class="btn-default-main" @click.prevent="showDialog('phone')">修改</a>
+            </p>
+            <p class="first-line">
+              <span class="account-title">微信</span>
+              <span class="account-tips-text">
+                <span>{{userInfo.Wechat}}</span>
+              </span>
+              <a href="#" class="btn-default-main" @click.prevent="showDialog('wechat')">修改</a>
+            </p>
+            <p>
+              <span class="account-title">邮箱帐号</span>
+              <span class="account-tips-text">
+                <span>{{userInfo.Mail}}</span>
+              </span>
+              <a href="#" class="btn-default-main" @click.prevent="showDialog('mail')">修改</a>
+            </p>
+            <p>
+              <span class="account-title">登录密码</span>
+              <span class="account-tips-text two-line-txt">密码要求至少包含字母，符号或数字中的两项且长度超过8位，建议您经常修改密码，以保证帐号更加安全。</span>
+              <a href="#" class="btn-default-main" @click.prevent="toUpdatePass">修改</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
+    <el-dialog title="修改信息" :visible.sync="dialogVisible" width="450px" :before-close="closeDialog">
+      <el-form class="form-box" :model="editInfo" :rules="formRules" ref="dynamicValidateForm">
+        <el-form-item prop="phone" v-if="type=='phone'">
+          <el-input v-model="editInfo.phone" placeholder="请输入新手机号"></el-input>
+        </el-form-item>
+        <el-form-item prop="wechat" v-if="type=='wechat'">
+          <el-input v-model="editInfo.wechat" placeholder="请输入新微信号"></el-input>
+        </el-form-item>
+        <el-form-item prop="mail" v-if="type=='mail'">
+          <el-input v-model="editInfo.mail" placeholder="请输入新邮箱"></el-input>
+        </el-form-item>
+        <el-form-item prop='check' v-if="editInfo.mail">
+          <reCaptcha :sitekey="sitekey" @getValidateCode='getValidateCode' v-model="editInfo.check"></reCaptcha>
+        </el-form-item>
+        <el-form-item prop="code" v-if="type=='mail'">
+          <el-col :span="14">
+            <el-input v-model="editInfo.code" placeholder="请输入验证码"></el-input>
+          </el-col>
+          <el-col style="text-align: center;" :span="2">-</el-col>
+          <el-col :span="8">
+            <el-button v-show="show" @click="sendCode">获取验证码</el-button>
+            <el-button v-show="!show" disabled>{{count}} s</el-button>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeDialog">取 消</el-button>
+        <el-button type="primary" @click="updateInfo">确 定</el-button>
+      </div>
+    </el-dialog>
   </section>
 </template>
 <script>
 import {getCookieInClient} from '../../utils/assist'
-import upDateInfo from './upDateInfo'
-import caseInfo from './caseInfo'
-import creatCase from './creatCase'
+import reCaptcha from '../login/reCaptcha'
 export default {
   data (){
+    var validatePhone = (rule, value, callback) => {
+      if (!value || value.trim() == '') {
+        return callback()
+      }
+      if (!(/^1[3456789]\d{9}$/g.test(value))) {
+        return callback(new Error('请输入正确的手机号'))
+      }
+      return callback()
+    };
+    var checkCode = (rule, value, callback) => {
+      if (value == false) {
+        callback(new Error('请进行人机验证'));
+      } else {
+        callback();
+      }
+    };
     return{
       currentTab: 0,
-      tabs: ['账号安全', '我的案例', '上传案例'],
+      tabs: [
+        {name: '账号安全', link: '/personal'},
+        {name: '我的案例', link: '/personal/myCase'},
+        {name: '上传案例', link: '/personal/creatCase'},
+        {name: '案例审核', link: '/personal/caseInfo'}
+      ],
       userInfo: {
         Name: '',
         RoleId: '',
         CompanyName: ''
-      }
+      },
+      dialogVisible: false,
+      type: '',
+      editInfo: {
+        phone: '',
+        wechat: '',
+        mail: '',
+        code: '',
+        check: ''
+      },
+      formRules: {
+        phone: [
+          { required: true, message: "请输入手机号", trigger: "blur"},
+          { validator: validatePhone, trigger: 'blur'}
+        ],
+        wechat: [
+          { required: true, message: "请输入微信号",trigger: "blur"}
+        ],
+        mail: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        code: [
+          { required: true, message: "请输入邮箱验证码",trigger: "blur"}
+        ],
+        check: [
+          { validator: checkCode, trigger: 'change' }
+        ]
+      },
+      sitekey: '6LeOsOQZAAAAAEgZzkD2ZE6kuR0vOFE8F2KqZB4x',
+      show: true,
+      count: '',
+      timer: null,
     }
   },
   components: {
-    upDateInfo,
-    caseInfo,
-    creatCase
+    reCaptcha
   },
   head () {
     return {
@@ -77,8 +182,68 @@ export default {
     // }
   },
   methods: {
-    changeTab (index) {
-      this.currentTab = index
+    closeDialog () {
+      this.$refs['dynamicValidateForm'].resetFields()
+      this.dialogVisible = false
+    },
+    showDialog (key) {
+      this.dialogVisible = true
+      this.type = key
+    },
+    updateInfo(){
+      this.$refs['dynamicValidateForm'].validate((valid) => {
+        if (valid) {
+          let {phone, wechat, mail, code} = this.editInfo
+          let params = {
+            key: this.type,
+            word: phone || wechat || mail,
+          }
+          if (this.type === 'mail') {
+            params.code = code
+          }
+          this.$ajax.get('/api/user/update', params).then((res) => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              setTimeout(()=>{
+                this.$router.push('/login')
+              },1000)
+            }
+          })
+        }
+      })
+      
+    },
+    sendCode () {
+      if (this.editInfo.mail && this.editInfo.check) {
+        this.$ajax.get('/api/send_mail_check',{
+          mail: this.editInfo.mail,
+          check: this.editInfo.check
+        }).then(res => {
+          this. getCode()
+        })
+      }
+    },
+    toUpdatePass () {
+      this.$router.push('/login/upDatePass')
+    },
+    getCode(){
+     const TIME_COUNT = 60;
+     if (!this.timer) {
+       this.count = TIME_COUNT;
+       this.show = false;
+       this.timer = setInterval(() => {
+       if (this.count > 0 && this.count <= TIME_COUNT) {
+         this.count--;
+        } else {
+         this.show = true;
+         clearInterval(this.timer);
+         this.timer = null;
+        }
+       }, 1000)
+      }
+    },
+    getValidateCode(value) {
+      this.editInfo.check = value
     }
   },
   mounted () {
@@ -96,55 +261,7 @@ export default {
 </script>
 
 <style scoped>
-	/*面包屑部分*/
-  div#bread-nav {
-    width:  100%;
-    height:  auto;
-  }
-  #bread-nav{
-    position: relative;
-  }
-  #bread-nav .brand-nav-content{
-    float: left;
-  }
-  .brand-nav-box {
-    width:  1200px;
-    margin:  0 auto;
-    color:  #858585;
-    font-size: 14px;
-    text-align:  left;
-    line-height: 70px;
-  }
-  .brand-nav-content{
-    float: left;
-  }
-  .brand-nav-title {
-    float:  left;
-  }
-  .brand-nav-list {
-    float:  left;
-    overflow:  hidden;
-  }
-  .brand-nav-list ul {
-    overflow: hidden;
-  }
-  .brand-nav-list ul li {
-    float:  left;
-    padding: 0 5px;
-  }
-  .brand-nav-list ul li a {
-    display:  block;
-    width:  100%;
-    height:  100%;
-    color: #858585;
-  }
-  .brand-nav-list ul li:last-child a {
-    color: #22202b;
-  }
-  .brand-nav-list ul li a:hover {
-    color: #22202b;
-  }
-  /*面包屑部分结束*/
+	
   .personal-main {
     overflow:  hidden;
     width:  1200px;
@@ -289,4 +406,4 @@ export default {
     width: 350px;
     margin: 0 auto;
   }
-  </style>
+</style>

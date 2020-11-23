@@ -45,7 +45,8 @@
           </div>
           <div class="empty" v-if="caseData.list.length<1">
             <img src="../../assets/images/empty.png" alt="">
-            <p>暂时没有数据~</p>
+            <p>你还没有上传案例</p>
+            <el-button type="primary" @click="toCreatCase">新建案例</el-button>
           </div>
           <el-pagination
             background
@@ -65,7 +66,7 @@ import {getCookieInClient} from '../../utils/assist'
 export default {
   data (){
     return{
-      currentTab: 3,
+      currentTab: 1,
       tabs: [
         {name: '账号安全', link: '/personal'},
         {name: '我的案例', link: '/personal/myCase'},
@@ -77,7 +78,7 @@ export default {
       searchForm: {
         page_no: 1,
         page_size: 10
-      }
+      },
     }
   },
   components: {
@@ -89,12 +90,15 @@ export default {
     }
   },
   async asyncData(context){
-    let recomData = await context.app.$ajax.get('/api/case/check_case_list?page_no=1&page_size=10')
+    let recomData = await context.app.$ajax.get('/api/case/my_case?page_no=1&page_size=10')
     return {
       caseData: recomData.data
     }
   },
   methods: {
+    toCreatCase () {
+      this.$router.push('/personal/creatCase')
+    },
     handleCurrentChange(val){
       this.getData()
     },
@@ -105,6 +109,7 @@ export default {
     }
   },
   mounted () {
+    this.total = this.caseData.page.total
     let xsrf
     if (getCookieInClient('_xsrf')) {
       let _xsrfList = getCookieInClient('_xsrf')
