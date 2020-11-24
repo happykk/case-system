@@ -22,16 +22,8 @@ export default {
     }
   },
   methods: {
-    reEdit: function () {
-      this.$emit('stepChange', 1)
-      this.$router.push({ path: '/commodity-center/xiaobu/@publish', query: {id: this.id} })
-    },
-    toPublish: function () {
-      this.$emit('stepChange', 1)
-      this.$router.push({ path: '/commodity-center/xiaobu/@publish' })
-    },
     toList: function () {
-      this.$router.push({ path: '/commodity-center/xiaobu/list', params: { currentPage: this.$route.query.currentPage } })
+      this.$router.push({ path: '/commodity-center/xiaobu/list'})
     }
   },
   mounted () {

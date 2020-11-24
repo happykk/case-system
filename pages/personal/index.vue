@@ -123,8 +123,7 @@ export default {
       tabs: [
         {name: '账号安全', link: '/personal'},
         {name: '我的案例', link: '/personal/myCase'},
-        {name: '上传案例', link: '/personal/creatCase'},
-        {name: '案例审核', link: '/personal/caseInfo'}
+        {name: '上传案例', link: '/personal/creatCase'}
       ],
       userInfo: {
         Name: '',
@@ -246,7 +245,7 @@ export default {
       this.editInfo.check = value
     }
   },
-  mounted () {
+  created () {
     let xsrf
     if (getCookieInClient('_xsrf')) {
       let _xsrfList = getCookieInClient('_xsrf')
@@ -254,6 +253,9 @@ export default {
     }
     this.$ajax.get('/api/user/info', {xsrf: xsrf}).then((res) => {
       this.userInfo = res.data
+      if (this.userInfo.Check) {
+        this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+      }
       // sessionStorage.setItem('user', res.data.Name)
     })
   }

@@ -76,6 +76,7 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
+        debugger
         if (res.code === 0) {
           this.$emit('stepChange', 3)
         }

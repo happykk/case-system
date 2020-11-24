@@ -33,13 +33,12 @@
         <div class="bg-box-radius">
           <div class="case-list">
             <div class="case-item" v-for="(item, index) in caseData.list" :key="index">
-              <h3>{{item.case_name}}</h3>
+              <h3 @click="toDetail(item)">{{item.case_name}}</h3>
               <div class="case-desc">{{item.summary}}</div>
               <div class="case-info">
                 <span>作者: {{item.author}}</span>
                 <span>作者单位：{{item.author_company}}</span>
-                <span>类型: {{item.summary}}</span>
-                <span class="fr">入库时间: {{item.create_time.split(' ')[0]}}</span>
+                <span>入库时间: {{item.create_time.split(' ')[0]}}</span>
               </div>
             </div>
           </div>
@@ -77,7 +76,7 @@ export default {
       searchForm: {
         page_no: 1,
         page_size: 10
-      }
+      },
     }
   },
   components: {
@@ -99,9 +98,13 @@ export default {
       this.getData()
     },
     getData(){
-      this.$ajax.get(`/api/case/list`, this.searchForm).then( (res) => {
+      this.$ajax.get(`/api/case/check_case_list`, this.searchForm).then( (res) => {
         this.caseData.list = this.caseData.list.concat(res.data.list || [])
       })
+    },
+    toDetail (row) {
+      sessionStorage.setItem('caseDetail', JSON.stringify(row))
+      this.$router.push({path: `/cases/${row.id}`})
     }
   },
   mounted () {
@@ -236,10 +239,12 @@ export default {
     color: #7e8c8d;
     margin-bottom: 6px;
   }
+  .case-item h3:hover{
+    color: #136fe1;
+  }
   .case-desc{
     font-size: 14px;
     color: #333;
-    padding: 15px 0;
     display: -webkit-box;
     /* autoprefixer: off */
     -webkit-box-orient: vertical;
@@ -255,4 +260,5 @@ export default {
   .case-info span{
     margin-right: 15px;
   }
+  
 </style>

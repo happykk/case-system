@@ -46,9 +46,8 @@
         <h3>{{item.case_name}}</h3>
         <span>{{item.summary}}</span>
         <div class="case-info">
-          <span>作者: {{item.author}}</span>
+          <span>作者: {{item.author}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
           <span>作者单位：{{item.author_company}}</span>
-          <span>类型: {{item.summary}}</span>
           <span class="fr">入库时间: {{item.create_time.split(' ')[0]}}</span>
         </div>
       </div>
@@ -146,6 +145,7 @@
       },
       search () {
         this.recomData.list = []
+        this.total = 0
         this.getData()
       },
       getData(){
@@ -177,6 +177,11 @@
   border-radius: 8px;
   padding: 10px 20px 20px;
   margin-top: 20px;
+}
+.case-item {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #f4f5f9;
 }
 .case-item h3{
   font-size: 20px;
