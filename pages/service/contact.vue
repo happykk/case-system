@@ -28,14 +28,6 @@
 			</div>
 		</div>
 		<!-- 面包屑部分结束 -->
-		
-		<!-- Place Map start -->
-		<div id="place_map_wrap">
-			<div class="contact_place_map_box">
-				<commonMap :mapData="mapData"></commonMap>
-			</div>
-		</div>
-		<!-- Place Map end -->
 			
 		<!-- Contact Us start -->
 		<div id="contact_us_wrap">
@@ -133,7 +125,6 @@
 
 <script>
 	import axios from 'axios'
-	import commonMap from '~/components/common/commonMap'
 
 	export default {
 		data (){
@@ -147,7 +138,6 @@
 			}
 		},
 		components: {
-			commonMap
 		},
 		head () {
 		  return {

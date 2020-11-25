@@ -27,7 +27,7 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     script: [
-      {src: 'http://api.map.baidu.com/api?v=2.0&ak=MDdqxkqhQzfdBzfu2tfGiidGbHgTfGrB'}
+      // {src: 'http://api.map.baidu.com/api?v=2.0&ak=MDdqxkqhQzfdBzfu2tfGiidGbHgTfGrB'}
     ]
   },
   css:['~assets/css/reset.css'],
@@ -93,27 +93,6 @@ module.exports = {
   //   Disallow: '/',
   //   Sitemap: 'http://www.visney.cn/sitemap.xml'
   // },
-  sitemap: {
-    cacheTime: 1000 * 60 * 60 * 24,
-    gzip: false,
-    generate: true,
-    routes () {
-      return  axios.get('http://visney.cn:81/product/selectAllIds')
-      .then(res => res.data.map(
-        prodView => '/prod/pdV/' + prodView.id + '?typeId=' + prodView.typeId + '&classId=' + prodView.classId
-      ))
-      // axios.get('http://visney.cn:81/article/selectAllIds')
-      // .then(res => res.data.map(
-      //   newsView => '/news/newsView/' + newsView.articleId + '?category=' + newsView.category
-      // ))
-      // 
-      // package.json
-      // "dev": "nuxt",
-    // "build": "nuxt build",
-    // "start": "nuxt start",
-    // "generate": "nuxt generate",
-    }
-  },
   plugins: ["@/plugins/element-ui", '@/plugins/axios'],
   env: {
     BASE_URL: process.env.BASE_URL,

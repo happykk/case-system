@@ -7,7 +7,7 @@
     <div class="news-main">
       <div class="recom-info-content">
         <ul>
-          <li class="recom-info-list" v-for="(list) in recomInfo" :key="list.id">
+          <li class="recom-info-list" v-for="(list) in recomInfo.list" :key="list.id">
             <div class="recom-info-title">
               <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}"><h2>{{list.title}}</h2></nuxt-link>
             </div>
@@ -16,7 +16,7 @@
                 <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}">
                   <img :src="'http://81.71.142.158/static/image/'+list.img">
                 </nuxt-link>
-                <div class="recom-info-times">
+                <div class="recom-info-times" v-if="list.update_time">
                   <span><font class="dd" id="dd-1">{{list.update_time.split(' ')[0].split('-')[2]}}</font></span>
                   <font class="ym" id="ym-1">{{list.update_time.split(' ')[0].split('-')[0]}}-{{list.update_time.split(' ')[0].split('-')[1]}}</font>
                 </div>
@@ -31,6 +31,8 @@
           background
           style="text-align: center;"
           layout="prev, pager, next"
+          :page-size="formData.page_size"
+          :current-page="formData.page_no"
           @current-change="handleCurrentChange"
           :total="total">
         </el-pagination>
@@ -117,26 +119,28 @@
 		},
 		async asyncData(context){
 			//推荐资讯
-      let recomData = await context.app.$ajax.get('/api/article/list?type=1&page_no=1&page_size=3')
+      let recomData = await context.app.$ajax.get('/api/article/list?type=1&page_no=1&page_size=10')
       let hotDatas = await context.app.$ajax.get('/api/article/hot')
       let newDatas = await context.app.$ajax.get('/api/article/new')
       return {
-        recomInfo: recomData.data.list,
+        recomInfo: recomData.data,
         hotNews: hotDatas.data,
         newNes: newDatas.data
       }
     },
     methods: {
       handleCurrentChange(val){
+        this.formData.page_no = val
         this.getData()
       },
       getData(){
-        axios(`${process.env.BASE_URL}/api/article/list`,{
-          params: this.formData
-        }).then( (res) => {
-          this.recomInfo = this.recomInfo.concat(res.data)
+        this.$ajax.get(`/api/article/list`,this.formData).then((res) => {
+          this.recomInfo.list = res.data.list
         })
       }
+    },
+    mounted () {
+      this.total = this.recomInfo.page.total
     }
 	}
 	

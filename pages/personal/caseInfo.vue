@@ -104,7 +104,7 @@ export default {
     },
     toDetail (row) {
       sessionStorage.setItem('caseDetail', JSON.stringify(row))
-      this.$router.push({path: `/cases/${row.id}`})
+      this.$router.push({path: `/personal/${row.id}`})
     }
   },
   mounted () {
@@ -235,6 +235,7 @@ export default {
     border-bottom: 1px solid #DCDFE6;
   }
   .case-item h3{
+    cursor: pointer;
     font-size: 20px;
     color: #7e8c8d;
     margin-bottom: 6px;

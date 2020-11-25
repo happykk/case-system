@@ -246,12 +246,12 @@ export default {
     }
   },
   created () {
-    let xsrf
-    if (getCookieInClient('_xsrf')) {
-      let _xsrfList = getCookieInClient('_xsrf')
-      xsrf = window.atob(_xsrfList.split('|')[0])
-    }
-    this.$ajax.get('/api/user/info', {xsrf: xsrf}).then((res) => {
+    // let xsrf
+    // if (getCookieInClient('_xsrf')) {
+    //   let _xsrfList = getCookieInClient('_xsrf')
+    //   xsrf = window.atob(_xsrfList.split('|')[0])
+    // }
+    this.$ajax.get('/api/user/info').then((res) => {
       this.userInfo = res.data
       if (this.userInfo.Check) {
         this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})

@@ -43,7 +43,7 @@
     </div>
     <div class="mod-block case-list">
       <div class="case-item" v-for="(item, index) in recomData.list" :key="index">
-        <h3>{{item.case_name}}</h3>
+        <h3 @click="toDetail(item)">{{item.case_name}}</h3>
         <span>{{item.summary}}</span>
         <div class="case-info">
           <span>作者: {{item.author}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -59,7 +59,8 @@
         background
         style="text-align: center; margin: 30px 0"
         layout="prev, pager, next"
-        :page-size="searchForm.page_no"
+        :page-size="searchForm.page_size"
+        :current-page="searchForm.page_no"
         @current-change="handleCurrentChange"
         :total="total">
       </el-pagination>
@@ -112,26 +113,12 @@
 		  }
 		},
 		async asyncData(context){
-      let recomData = await context.app.$ajax.get('/api/case/list?page_no=1&page_size=10&cat_id=0')
+      let recomData = await context.app.$ajax.get(`/api/case/list?page_no=1&page_size=10&cat_id=0`)
       return {
         recomData: recomData.data
       }
     },
     methods: {
-      getTxt (str,index,num1=136,num2=42){
-        var txt = str.replace(/<\/?.+?>/g,"").replace(/&nbsp;/ig,"").replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,''); 
-        if (index == 0) {
-          //截取指定字数末尾显示省略号
-          txt = txt.length < num1 ? txt : txt.substring(0,num1).concat('...');
-        } else {
-          txt = txt.length < num2 ? txt : txt.substring(0,num2).concat('...');
-        }
-        return txt;
-      },
-      getTime(time){
-        var time = time.slice(5, 10);
-        return time;
-      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
@@ -141,6 +128,7 @@
         })
       },
       handleCurrentChange(val){
+        this.searchForm.page_no = val
         this.getData()
       },
       search () {
@@ -152,13 +140,18 @@
         let cat_id = this.searchForm.cat_id || 0
         let params = Object.assign({},this.searchForm, {cat_id: cat_id})
         this.$ajax.get(`/api/case/list`, params).then( (res) => {
-          this.recomData.list = this.recomData.list.concat(res.data.list || [])
+          this.recomData.list = res.data.list || []
         })
+      },
+      toDetail (row) {
+        sessionStorage.setItem('caseDetail', JSON.stringify(row))
+        this.$router.push({path: `/cases/${row.id}`})
       }
     },
     mounted () {
       this.getCateList()
       this.total = this.recomData.page.total
+      this.searchForm.page_no = this.recomData.page.page_no
     }
   }
 </script>
@@ -187,6 +180,15 @@
   font-size: 20px;
   color: #7e8c8d;
   margin-bottom: 6px;
+}
+.case-item h3{
+  cursor: pointer;
+  font-size: 20px;
+  color: #7e8c8d;
+  margin-bottom: 6px;
+}
+.case-item h3:hover{
+  color: #136fe1;
 }
 .case-desc{
   font-size: 14px;
