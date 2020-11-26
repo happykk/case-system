@@ -5,8 +5,14 @@
         <div class="i-h-top">
           <div class="t-m-login">
             <i class="el-icon-user-solid"></i>
-            <router-link to="/login" v-if="!userName">请登录</router-link>
-            <span>{{userName}}</span>
+            <router-link to="/login" v-if="!$store.state.userInfo.Name">请登录</router-link>
+            <div class="dropdown" v-else>
+              <span @click="showPopMenu">{{$store.state.userInfo.Name}}</span>
+              <div class="dropdown-content" :class="{'show': isShowPopMenu}">
+                <span>我的账户</span>
+                <span @click="loginOut">注销</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="i-h-logo">
@@ -75,7 +81,7 @@
         ],
         activeIndex: 0,
         searchVal: '',
-        userName: '孙佳'
+        isShowPopMenu: false
 			}
 		},
 		computed: {
@@ -95,6 +101,15 @@
 		methods: {
 			changeIndex (index) {
         this.activeIndex = index
+      },
+      showPopMenu () {
+        this.isShowPopMenu = !this.isShowPopMenu
+      },
+      loginOut () {
+        this.$ajax.get('/api/login_out').then(res => {
+          this.$store.commit('setUserInfo', {})
+          location. reload()
+        })
       }
 		}
 	}
@@ -181,6 +196,38 @@
     background-color: #136fe1;
     color: #fff;
   }
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown-content {
+    border-radius: 4px;
+    position: absolute;
+    background-color: #fff;
+    width: 92px;
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+    top: 25px;
+    right: -24px;
+    padding: 12px 16px;
+    z-index: 999;
+    display: none;
+  }
+  .dropdown-content.show{
+    display: block;
+  }
+  .dropdown span{
+    cursor: pointer;
+  }
+  .dropdown-content span{
+    display: block;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.5;
+    padding-top: 6px;
+    white-space: nowrap;
+    letter-spacing: 0.00938em;
+    padding-bottom: 6px;
+  }
 </style>
 <style>
 .search-box .el-input__inner{
@@ -192,4 +239,5 @@
   border-radius: 0;
   border: 0 none;
 }
+
 </style>

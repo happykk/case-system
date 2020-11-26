@@ -108,12 +108,12 @@ export default {
     }
   },
   mounted () {
-    let xsrf
-    if (getCookieInClient('_xsrf')) {
-      let _xsrfList = getCookieInClient('_xsrf')
-      xsrf = window.atob(_xsrfList.split('|')[0])
-    }
-    this.$ajax.get('/api/user/info', {xsrf: xsrf}).then((res) => {
+    // let xsrf
+    // if (getCookieInClient('_xsrf')) {
+    //   let _xsrfList = getCookieInClient('_xsrf')
+    //   xsrf = window.atob(_xsrfList.split('|')[0])
+    // }
+    this.$ajax.get('/api/user/info').then((res) => {
       this.userInfo = res.data
       // sessionStorage.setItem('user', res.data.Name)
     })
@@ -236,16 +236,16 @@ export default {
   }
   .case-item h3{
     cursor: pointer;
-    font-size: 20px;
-    color: #7e8c8d;
+    font-size: 18px;
+    color: #121212;
     margin-bottom: 6px;
   }
   .case-item h3:hover{
     color: #136fe1;
   }
   .case-desc{
-    font-size: 14px;
-    color: #333;
+    font-size: 15px;
+    color: #121212;
     display: -webkit-box;
     /* autoprefixer: off */
     -webkit-box-orient: vertical;

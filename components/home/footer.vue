@@ -18,13 +18,13 @@
           </div>
         </div>
       </div>
-      <div class="friend-links fr" @click="show">
+      <div class="friend-links fr" @click="show" ref="box">
         <span class="label">友情链接</span>
         <i class="el-icon-arrow-down fr"></i>
         <ul class="link-list" v-if="showLink">
-          <li>湖南大学</li>
-          <li>湖南大学</li>
-          <li>湖南大学</li>
+          <li v-for="(item, index) in friendLink" :key="index" @click="toOutWeb(item.Link)">
+            {{ item.CollegeName }}
+          </li>
         </ul>
       </div>
     </div>
@@ -121,26 +121,33 @@ li{
             link: '/service/questions'
           }
         ],
-        showLink: false
+        showLink: false,
+        friendLink: [],
+        value: ''
       }
     },
     methods: {
       show () {
         this.showLink = !this.showLink
+      },
+      toOutWeb (url) {
+        this.showLink = false
+        window.open(url,"_blank");
       }
     },
 		computed: {
 			...mapState(['headProdNav','headNewsNav','indexLinksData'])
 		},
-		// mounted (){
-		// 	//判断是否为首页，首页则改变友情链接控制字段，只在首页显示
-		// 	let that = this
-		// 	if(that.$route.params.tag === undefined && that.$route.fullPath === '/'){
-		// 		that.$store.commit('setIndexShowLinks', true)
-		// 	}else {
-		// 		that.$store.commit('setIndexShowLinks', false)
-		// 	}
-		// }
+		mounted (){
+      this.$ajax.get('/api/friendly_link').then(res => {
+        this.friendLink = res.data
+      })
+      document.addEventListener('click',(e)=>{
+        if(!this.$refs.box.contains(e.target)){
+          this.showLink = false;
+        }
+      })
+		}
 	}
 </script>
 <style scoped>

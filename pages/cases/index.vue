@@ -12,7 +12,7 @@
           <el-form-item prop="cat_id" label="案例分类">
             <el-select v-model="searchForm.cat_id" placeholder="请选择">
               <el-option
-                v-for="item in catList"
+                v-for="item in $store.state.cateData.data"
                 :key="item.id"
                 :label="item.menu_name"
                 :value="item.id">
@@ -96,8 +96,7 @@
           page_no: 1,
           page_size: 10
         },
-        total: 0,
-        catList: []
+        total: 0
       }
 		},
 		components: {
@@ -122,11 +121,6 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
-      getCateList () {
-        this.$ajax.get('/api/menu', {type: 3}).then( res => {
-          this.catList = res.data
-        })
-      },
       handleCurrentChange(val){
         this.searchForm.page_no = val
         this.getData()
@@ -149,7 +143,6 @@
       }
     },
     mounted () {
-      this.getCateList()
       this.total = this.recomData.page.total
       this.searchForm.page_no = this.recomData.page.page_no
     }

@@ -12,6 +12,9 @@ const state = {
 	headNewsNav: {},
 	headJobNav: {},
 	indexLinksData: null,
+	_xsrf: '',
+	cateData: null,
+	userInfo: {}
 	// indexShowLinks: false
 };
 
@@ -29,6 +32,15 @@ const mutations = {
 		setIndexLinksData(state,data){
 			state.indexLinksData = data
 		},
+		setXsrf(state,data){
+			state._xsrf = data
+		},
+		setCateData(state,data){
+			state.cateData = data
+		},
+		setUserInfo(state,data){
+			state.userInfo = data
+		}
 		// setIndexShowLinks(state,bool){
 		// 	state.indexShowLinks = bool
 		// }	
@@ -49,9 +61,9 @@ const actions = {
 		// //招聘导航
 		// 	let headJobNav = await axios(`${state.wordpressAPIForJob}/jobClass/getAll`);
 		// 	commit('setHeadJobNav',headJobNav.data);
-		// //友情链接
-		// 	let indexLinksData = await axios(`${state.wordpressAPI}/link/selectAll`);
-		// 	commit('setIndexLinksData',indexLinksData.data);
+		// 案例分类
+		let cateData = await axios(`${state.basicUrl}/api/menu?type=3`);
+		commit('setCateData',cateData.data);
 	}
 };
 

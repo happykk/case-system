@@ -44,9 +44,9 @@
             <span class="val">{{detail.create_time.split(' ')[0]}}</span>
             <span class="label">入库时间</span>
           </li>
-          <li>
+          <li v-if="detail.cat_id">
             <i class="el-icon-menu"></i>
-            <span class="val">{{detail.cat_id}}</span>
+            <span class="val">{{filterCate(detail.cat_id)}}</span>
             <span class="label">分类</span>
           </li>
         </ul>
@@ -105,11 +105,6 @@
         }
 			}
     },
-    filters: {
-      catFilters (val) {
-
-      }
-    },
 		components: {
 			BreadCrumbs
 		},
@@ -123,10 +118,9 @@
       // }
     },
     methods: {
-      getCateList () {
-        this.$ajax.get('/api/menu', {type: 3}).then( res => {
-          this.catList = res.data
-        })
+      filterCate (val) {
+        let cate = this.$store.state.cateData.data.filter(item => item.id==val )
+        return cate[0].menu_name
       },
       showDialog () {
         this.dialogVisible = true
@@ -148,7 +142,6 @@
     },
 		mounted (){
       this.detail = JSON.parse(sessionStorage.getItem('caseDetail'))
-      this.getCateList()
 		}
 	}
 </script>

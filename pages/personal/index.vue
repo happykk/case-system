@@ -256,6 +256,7 @@ export default {
       if (this.userInfo.Check) {
         this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
       }
+      this.$store.commit('setUserInfo', this.userInfo)
       // sessionStorage.setItem('user', res.data.Name)
     })
   }
