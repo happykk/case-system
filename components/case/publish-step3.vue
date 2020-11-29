@@ -27,7 +27,7 @@ export default {
     }
   },
   mounted () {
-    this.id = Store.publishGoodsId
+    // this.id = Store.publishGoodsId
   }
 }
 </script>

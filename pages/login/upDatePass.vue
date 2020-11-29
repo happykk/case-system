@@ -53,6 +53,8 @@ export default {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
+      } else if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/.test(value)) {
+        callback(new Error('长度必须为8~16位，且由数字、字母、_组成'));
       } else {
         if (this.editInfo.checkPass !== '') {
           this.$refs.dynamicValidateForm.validateField('checkPass');

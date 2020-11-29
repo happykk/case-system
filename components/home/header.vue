@@ -9,7 +9,7 @@
             <div class="dropdown" v-else>
               <span @click="showPopMenu">{{$store.state.userInfo.Name}}</span>
               <div class="dropdown-content" :class="{'show': isShowPopMenu}">
-                <span>我的账户</span>
+                <span @click="toPersonal">我的账户</span>
                 <span @click="loginOut">注销</span>
               </div>
             </div>
@@ -76,7 +76,7 @@
           },
           {
             title: '帮助中心',
-            link: '/service/questions'
+            link: '/service/1'
           }
         ],
         activeIndex: 0,
@@ -105,7 +105,12 @@
       showPopMenu () {
         this.isShowPopMenu = !this.isShowPopMenu
       },
+      toPersonal () {
+        this.isShowPopMenu = false
+        this.$router.push('personal')
+      },
       loginOut () {
+        this.isShowPopMenu = false
         this.$ajax.get('/api/login_out').then(res => {
           this.$store.commit('setUserInfo', {})
           location. reload()

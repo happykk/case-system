@@ -251,14 +251,17 @@ export default {
     //   let _xsrfList = getCookieInClient('_xsrf')
     //   xsrf = window.atob(_xsrfList.split('|')[0])
     // }
-    this.$ajax.get('/api/user/info').then((res) => {
-      this.userInfo = res.data
-      if (this.userInfo.Check) {
-        this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
-      }
-      this.$store.commit('setUserInfo', this.userInfo)
-      // sessionStorage.setItem('user', res.data.Name)
-    })
+    if (!this.$store.state.userInfo.Name) {
+      this.$ajax.get('/api/user/info').then((res) => {
+        this.userInfo = res.data
+        if (this.userInfo.Check) {
+          this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+        }
+        this.$store.commit('setUserInfo', this.userInfo)
+      })
+    } else {
+      this.userInfo = this.$store.state.userInfo
+    }
   }
 }
 </script>

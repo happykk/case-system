@@ -29,7 +29,7 @@
       </el-upload>
     </div>
     <div class="footer">
-      <el-button type="primary" @click="submit()">下一步</el-button>
+      <el-button type="primary" @click="submit" :loading="loading">下一步</el-button>
     </div>
   </section>
 </template>
@@ -41,17 +41,20 @@ export default {
     return{
       type: '',
       formEntity: {
-        text_pdf: [],
-        desc_pdf: []
+        text_pdf: '',
+        desc_pdf: ''
       },
-      formData: new FormData()
+      formData: new FormData(),
+      loading: false
     }
   },
   methods: {
     httpRequestText (param) {
+      this.formEntity.text_pdf = param.file.name
       this.formData.append('text_pdf',param.file)
     },
     httpRequestDesc (param) {
+      this.formEntity.desc_pdf = param.file.name
       this.formData.append('desc_pdf',param.file)
     },
     handleRemoveText (file, fileList) {
@@ -61,22 +64,33 @@ export default {
       this.formData.delete('desc_pdf')
     },
     submit () {
-      // if (this.formEntity.text_pdf.length<1) {
-      //   this.$message.warning('请添加案例正文')
-      //   return
-      // } else if (this.formEntity.desc_pdf.length<1) {
-      //   this.$message.warning('请添加使用说明')
-      //   return
-      // }
+      this.loading = true;
       this.$refs.upload.submit()
       this.$refs.uploadDesc.submit()
-      
-      axios.post(`${process.env.BASE_URL}/api/case/case_upload`, this.formData, {
+      if (this.formEntity.text_pdf.length<1) {
+        this.$message.warning('请添加案例正文')
+        return
+      } else if (this.formEntity.desc_pdf.length<1) {
+        this.$message.warning('请添加使用说明')
+        return
+      }
+      let url
+      if (this.$route.query.id) {
+        url = `${this.$store.state.basicUrl}/api/case/update`
+        this.formData.append('case_id', this.$route.query.id)
+      } else {
+        url = `${this.$store.state.basicUrl}/api/case/case_upload`
+      }
+      axios.post(url, this.formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
-        if (res.data.code === 0) {
+        this.loading = false
+        this.formData.delete('text_pdf')
+        this.formData.delete('desc_pdf')
+        this.formData.delete('case_id')
+        if (res.data && res.data.code === 0) {
           this.$emit('stepChange', 3)
         }
       })

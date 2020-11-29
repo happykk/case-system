@@ -17,12 +17,16 @@
           <div><span class="label">【中文关键词】</span><span>{{detail.chinese_keyword}}</span></div>
           <div><span class="label">【英文关键词】</span><span>{{detail.english_keyword}}</span></div>
           <div>
-            <span>【中文摘要】</span>
+            <span class="label">【中文摘要】</span>
             <p>{{detail.summary}}</p>
           </div>
           <div>
-            <span>【英文摘要】</span>
+            <span class="label">【英文摘要】</span>
             <p>{{detail.english_summary}}</p>
+          </div>
+          <div class="view-link">
+            <span class="view-content" @click="viewContent(1)">查看全文</span>
+            <span class="view-desc" @click="viewContent(2)">查看说明文档</span>
           </div>
         </div>
       </div>
@@ -192,6 +196,23 @@
             this.total = res.data.page.total
           }
         })
+      },
+      viewContent (type) {
+        // this.$router.push({
+        //   path: '/viewCase',
+        //   query: {
+        //     type: type,
+        //     case_id: this.params.case_id
+        //   }
+        // })
+        const newurl = this.$router.resolve({
+          path: '/viewcase',
+          query: {
+            type: type,
+            case_id: this.params.case_id
+          }
+        })
+        window.open(newurl.href,'_blank')
       }
     },
 		mounted (){
@@ -284,6 +305,18 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 15px;
+  }
+  .view-link{
+    text-align: center;
+  }
+  .view-link>span{
+    display: inline-block;
+    padding: 5px 15px;
+    border: 1px solid #136fe1;
+    color: #136fe1;
+    border-radius: 30px;
+    margin-right: 10px;
+    cursor: pointer;
   }
   .case-detail>div{
     margin-top: 15px;

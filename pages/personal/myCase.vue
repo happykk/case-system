@@ -30,29 +30,37 @@
         </div>
       </div>
       <div class="right-content">
+        <div class="tab-box">
+          <span
+            v-for="(item, index) in tablist"
+            :key="index"
+            :class="[ {'active': current==index}]"
+            @click="setTab(item,index)"
+          >{{item}}</span>
+        </div>
         <div class="bg-box-radius">
           <div class="case-list">
             <div class="case-item" v-for="(item, index) in caseData.list" :key="index">
-              <h3>{{item.case_name}}</h3>
+              <h3 @click="toCaseDetail(item)">{{item.case_name}}</h3>
               <div class="case-desc">{{item.summary}}</div>
               <div class="case-info">
                 <span>作者: {{item.author}}</span>
                 <span>作者单位：{{item.author_company}}</span>
-                <span>类型: {{item.summary}}</span>
                 <span class="fr">入库时间: {{item.create_time.split(' ')[0]}}</span>
               </div>
             </div>
           </div>
           <div class="empty" v-if="caseData.list.length<1">
             <img src="../../assets/images/empty.png" alt="">
-            <p>你还没有上传案例</p>
-            <el-button type="primary" @click="toCreatCase">新建案例</el-button>
+            <p>{{current===0?'你还没有上传案例':'没有任何数据~'}}</p>
+            <el-button type="primary" @click="toCreatCase" v-if="current===0">新建案例</el-button>
           </div>
           <el-pagination
+            v-if="caseData.list.length>0"
             background
             style="text-align: center; margin: 30px 0"
             layout="prev, pager, next"
-            :page-size="searchForm.page_no"
+            :page-size="searchForm.page_size"
             @current-change="handleCurrentChange"
             :total="total">
           </el-pagination>
@@ -73,7 +81,9 @@ export default {
         {name: '上传案例', link: '/personal/creatCase'},
         {name: '案例审核', link: '/personal/caseInfo'}
       ],
+      tablist: ['已通过','未通过'],
       userInfo: '',
+      current: 0,
       total: 0,
       searchForm: {
         page_no: 1,
@@ -92,33 +102,61 @@ export default {
   async asyncData(context){
     let recomData = await context.app.$ajax.get('/api/case/my_case?page_no=1&page_size=10')
     return {
-      caseData: recomData.data
+      caseData: recomData.data,
+      total: recomData.data.page.total
     }
   },
   methods: {
+    setTab (val,index) {
+      if (index === this.current) return
+      this.current = index
+      this.searchForm.page_no = 1
+      this.caseData.list = []
+      this.getData()
+    },
+    toCaseDetail (row) {
+      if (this.current === 0){
+        sessionStorage.setItem('caseDetail', JSON.stringify(row))
+        this.$router.push({path: `/cases/${row.id}`})
+      } else {
+        this.$router.push({path: '/personal/creatCase',query: {id: row.id}})
+      }
+    },
     toCreatCase () {
       this.$router.push('/personal/creatCase')
     },
     handleCurrentChange(val){
+      this.searchForm.page_no = val
       this.getData()
     },
     getData(){
-      this.$ajax.get(`/api/case/list`, this.searchForm).then( (res) => {
-        this.caseData.list = this.caseData.list.concat(res.data.list || [])
+      let params = Object.assign({}, this.searchForm)
+      if (this.current === 1) {
+        params.logic_check = 2
+      }
+      this.$ajax.get('/api/case/my_case', params).then( (res) => {
+        this.caseData.list = res.data.list || []
       })
     }
   },
   mounted () {
-    this.total = this.caseData.page.total
-    let xsrf
-    if (getCookieInClient('_xsrf')) {
-      let _xsrfList = getCookieInClient('_xsrf')
-      xsrf = window.atob(_xsrfList.split('|')[0])
+    // this.total = this.caseData.page.total
+    // let xsrf
+    // if (getCookieInClient('_xsrf')) {
+    //   let _xsrfList = getCookieInClient('_xsrf')
+    //   xsrf = window.atob(_xsrfList.split('|')[0])
+    // }
+    if (!this.$store.state.userInfo.Name) {
+      this.$ajax.get('/api/user/info').then((res) => {
+        this.userInfo = res.data
+        if (this.userInfo.Check) {
+          this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+        }
+        this.$store.commit('setUserInfo', this.userInfo)
+      })
+    } else {
+      this.userInfo = this.$store.state.userInfo
     }
-    this.$ajax.get('/api/user/info', {xsrf: xsrf}).then((res) => {
-      this.userInfo = res.data
-      // sessionStorage.setItem('user', res.data.Name)
-    })
   }
 }
 </script>
@@ -213,6 +251,7 @@ export default {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     background: #fff;
+    overflow: hidden;
   }
   .empty{
     padding: 40px 0;
@@ -240,6 +279,10 @@ export default {
     font-size: 20px;
     color: #7e8c8d;
     margin-bottom: 6px;
+    cursor: pointer;
+  }
+  .case-item h3:hover{
+    color: #136fe1;
   }
   .case-desc{
     font-size: 14px;
@@ -259,5 +302,25 @@ export default {
   }
   .case-info span{
     margin-right: 15px;
+  }
+  .tab-box{
+    height: 65px;
+    font-size: 14px;
+    color: #999;
+    padding: 0 30px;
+    position: relative;
+    border-radius: 4px;
+    background: #fff;
+    margin-bottom: 20px;
+  }
+  .tab-box span{
+    display: inline-block;
+    line-height: 64px;
+    margin-right: 50px;
+    cursor: pointer;
+  }
+  .tab-box .active {
+    color: #444;
+    border-bottom: 2px solid #444;
   }
 </style>

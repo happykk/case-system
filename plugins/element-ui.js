@@ -24,7 +24,7 @@ import {
   Steps,
   Step,
   Upload,
-  Radio
+  Radio,
 } from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 
@@ -53,7 +53,7 @@ const components = [
   Steps,
   Step,
   Upload,
-  Radio
+  Radio,
 ];
 
 const Element = {

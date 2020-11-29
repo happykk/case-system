@@ -142,11 +142,11 @@ li{
       this.$ajax.get('/api/friendly_link').then(res => {
         this.friendLink = res.data
       })
-      document.addEventListener('click',(e)=>{
-        if(!this.$refs.box.contains(e.target)){
-          this.showLink = false;
-        }
-      })
+      // document.addEventListener('click',(e)=>{
+      //   if(!this.$refs.box.contains(e.target)){
+      //     this.showLink = false;
+      //   }
+      // })
 		}
 	}
 </script>

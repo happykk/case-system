@@ -80,9 +80,17 @@ export default {
     //   this.stepIndex = index
     //   this.step = 'step' + index
     // }
-    this.$ajax.get('/api/user/info').then((res) => {
-      this.userInfo = res.data
-    })
+    if (!this.$store.state.userInfo.Name) {
+      this.$ajax.get('/api/user/info').then((res) => {
+        this.userInfo = res.data
+        if (this.userInfo.Check) {
+          this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+        }
+        this.$store.commit('setUserInfo', this.userInfo)
+      })
+    } else {
+      this.userInfo = this.$store.state.userInfo
+    }
   }
 }
 </script>

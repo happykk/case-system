@@ -36,17 +36,17 @@
       <el-form-item prop="english_keyword" label="英文关键词">
         <el-input v-model="editInfo.english_keyword" placeholder="请输入英文关键词"></el-input>
       </el-form-item>
+      <el-form-item prop="applicable_courses" label="适用课程">
+        <el-input v-model="editInfo.applicable_courses" placeholder="请输入摘要"></el-input>
+      </el-form-item>
       <el-form-item prop="summary" label="摘要">
-        <el-input v-model="editInfo.summary" placeholder="请输入摘要"></el-input>
+        <el-input type="textarea" :rows="4" v-model="editInfo.summary" placeholder="请输入摘要"></el-input>
       </el-form-item>
       <el-form-item prop="english_summary" label="英文摘要">
-        <el-input v-model="editInfo.english_summary" placeholder="请输入英文摘要"></el-input>
+        <el-input type="textarea" :rows="4" v-model="editInfo.english_summary" placeholder="请输入英文摘要"></el-input>
       </el-form-item>
       <el-form-item prop="applicable_object" label="适用对象">
         <el-input v-model="editInfo.applicable_object" placeholder="请输入摘要"></el-input>
-      </el-form-item>
-      <el-form-item prop="applicable_courses" label="适用课程">
-        <el-input v-model="editInfo.applicable_courses" placeholder="请输入摘要"></el-input>
       </el-form-item>
     </el-form>
     <div class="footer">
@@ -137,8 +137,19 @@ export default {
     // let _xsrfList = getCookieInClient('_xsrf')
     // this.xsrf = window.atob(_xsrfList.split('|')[0])
     this.getCateList()
-    this.$ajax.get('/api/case/create').then( res => {
+    let url,params
+    if (this.$route.query.id) {
+      url = '/api/case/base'
+      params = {
+        case_id: this.$route.query.id
+      }
+    } else {
+      url = '/api/case/create'
+      params = ''
+    }
+    this.$ajax.get(url, params).then( res => {
       this.editInfo = res.data
+      this.editInfo.cat_id==0 && (this.editInfo.cat_id= '')
     })
   }
 }
@@ -154,5 +165,11 @@ export default {
 }
 .footer{
   text-align: center;
+}
+.el-input, .el-textarea{
+  width: 218px;
+}
+.el-textarea .el-textarea__inner{
+  resize: none !important;
 }
 </style>
