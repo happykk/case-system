@@ -112,7 +112,7 @@
 		  }
 		},
 		async asyncData(context){
-      let recomData = await context.app.$ajax.get(`/api/case/list?page_no=1&page_size=10&cat_id=0`)
+      let recomData = await context.app.$ajax.get(`/api/case/list?page_no=1&page_size=10&cat_id=0&case_name=${context.query.keyword||''}`)
       return {
         recomData: recomData.data
       }
@@ -144,6 +144,9 @@
     },
     mounted () {
       this.total = this.recomData.page.total
+      if (this.$route.query.keyword) {
+        this.searchForm.case_name = this.$route.query.keyword
+      }
       this.searchForm.page_no = this.recomData.page.page_no
     }
   }

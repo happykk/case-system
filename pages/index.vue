@@ -50,49 +50,48 @@
             </ul>
           </div>
           <div class="quick-entry">
-            <div>
+            <div @click="toDetail(1)">
               <img src="~/assets/images/index/icon-register.png" alt="">
               <span>注册帮助</span>
             </div>
-            <div>
+            <div @click="toDetail(3)">
               <img src="~/assets/images/index/icon-uploade.png" alt="">
               <span>上传案例帮助</span>
             </div>
-            <div>
+            <div @click="toDetail(2)">
               <img src="~/assets/images/index/icon-qa.png" alt="">
               <span>问答</span>
             </div>
-            <div>
+            <div @click="toDetail(4)">
               <img src="~/assets/images/index/icon-desc.png" alt="">
               <span>使用说明</span>
             </div>
           </div>
         </div>
       </div>
-      <!-- <div class="case-list">
+      <div class="case-list">
         <div class="w">
           <div class="header-title">
             <span class="fl">优秀案例</span>
-            <router-link to="news" class="fr">MORE ></router-link>
           </div>
           <div class="case-list">
             <div class="list-left">
-              <div class="case-list-item" v-for="(item, index) in reviewArr" :key="index">
-                <span class="index">01</span>
-                <p class="ellipsis">为培养MPAccy究生发现、分析、解决问题的能力为培养MPAccy究</p>
-                <span class="time">[2020-10-08]</span>
+              <div class="case-list-item" v-for="(item, index) in leftCaseData" :key="index" @click="toCaseDetail(item)">
+                <span class="index"><template v-if="index+1<10">0</template>{{index+1}}</span>
+                <p class="ellipsis">{{item.case_name}}</p>
+                <span class="time">[{{item.create_time.split(' ')[0]}}]</span>
               </div>
             </div>
             <div class="list-right">
-              <div class="case-list-item" v-for="(item, index) in reviewArr" :key="index">
-                <span class="index">01</span>
-                <p class="ellipsis">为培养MPAccy究生发现、分析、解决问题的能力为培养MPAccy究</p>
-                <span class="time">[2020-10-08]</span>
+              <div class="case-list-item" v-for="(item, index) in rightCaseData" :key="index" @click="toCaseDetail(item)">
+                <span class="index"><template v-if="index+2<10">0</template>{{index+2}}</span>
+                <p class="ellipsis">{{item.case_name}}</p>
+                <span class="time">[{{item.create_time.split(' ')[0]}}]</span>
               </div>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
   </section>
 </template>
 <script>
@@ -109,7 +108,7 @@
         clickNewsIndex: 0,
         defaultImg: 'http://img.visney.cn/img/nuxtPc/experice-bt/place_desc_right1.png',
         reviewArr: [],
-        noticeList: [],
+        noticeList: []
       }
     },
     components: {
@@ -139,19 +138,47 @@
       //首页通知信息
       let notice = await context.app.$ajax.get(`/api/article/list?type=2&page_no=1&page_size=6`)
       let news = await context.app.$ajax.get(`/api/article/list?type=1&page_no=1&page_size=3`)
+      let cases = await context.app.$ajax.get(`/api/case/excellent`)
+      let leftArr = []
+      let rightArr = []
+      for (let x = 0; x < cases.data.list.length; x++) {
+        if (x % 2) {
+          rightArr.push(cases.data.list[x])
+        } else {
+          leftArr.push(cases.data.list[x])
+        }
+      }
       return {
         metaData: metaData,
         bannerData: banner.data,
         noticeData: notice.data.list,
-        newsData: news.data.list
+        newsData: news.data.list,
+        leftCaseData: leftArr,
+        rightCaseData: rightArr
       }
     },
     methods: {
       tab (index){
         this.num = index;
+      },
+      toDetail (id) {
+        this.$router.push({path: `/service/${id}`})
+      },
+      toCaseDetail (row) {
+        sessionStorage.setItem('caseDetail', JSON.stringify(row))
+        this.$router.push({path: `/cases/${row.id}`})
       }
     },
     mounted () {
+      // this.$ajax.get('/api/case/excellent').then( res => {
+      //   for (let x = 0; x < res.data.list.length; x++) {
+      //     if (x % 2) {
+      //       this.rightCaseData.push(res.data.list[x])
+      //     } else {
+      //       this.leftCaseData.push(res.data.list[x])
+      //     }
+      //   }
+      // })
     }
   }
 </script>
@@ -270,6 +297,7 @@
   margin-top: 15px;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 .case-list .index{
   width: 20px;

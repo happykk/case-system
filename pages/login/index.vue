@@ -13,7 +13,7 @@
          <!-- <vue-recaptcha :sitekey="sitekey" :loadRecaptchaScript="true"></vue-recaptcha> -->
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('loginForm')">提交</el-button>
+          <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
           <el-button >注册</el-button>
           <span class="forget" @click="toUpdatePass">忘记密码？</span>
         </el-form-item>
@@ -85,15 +85,6 @@ export default {
               this.$router.push('/personal')
             }
           })
-        }
-      })
-    },
-    getUserInfo () {
-      let _xsrfList = getCookieInClient('_xsrf')
-      let _xsrf = window.atob(_xsrfList.split('|')[0])
-      this.$ajax.get('/api/user/info',{_xsrf: _xsrf}).then((res) => {
-        if (data.code===0) {
-          sessionStorage.setItem('')
         }
       })
     },

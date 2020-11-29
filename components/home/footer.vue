@@ -105,20 +105,20 @@ li{
       return {
         menuLists: [
           {
-            title: '学院简介',
-            link: '/service/presales'
+            title: '注册帮助',
+            link: '/service/1'
           },
           {
-            title: '学院新闻',
-            link: '/service/aftersales'
+            title: '上传帮助',
+            link: '/service/3'
           },
           {
-            title: '联系我们',
-            link: '/service/contact'
+            title: '问答',
+            link: '/service/2'
           },
           {
-            title: '教授与智库',
-            link: '/service/questions'
+            title: '使用说明',
+            link: '/service/4'
           }
         ],
         showLink: false,

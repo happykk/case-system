@@ -7,15 +7,15 @@
       <div class="article">
         <h3 class="title">{{detail.case_name}}</h3>
         <div class="case-detail">
-          <div><span>【指导者】</span>{{detail.director_name}}</div>
-          <div><span>【译者】</span>{{detail.translator_name}}</div>
-          <div><span>【上传者】</span>{{detail.applicable_object}}</div>
-          <div><span>【上传者单位】</span>{{detail.upload_company_id}}</div>
-          <div><span>【案例语种】</span>{{detail.language}}</div>
-          <div><span>【适用对象】</span>{{detail.applicable_object}}</div>
-          <div><span>【适用课程】</span>{{detail.applicable_courses}}</div>
-          <div><span>【中文关键词】</span>{{detail.chinese_keyword}}</div>
-          <div><span>【英文关键词】</span>{{detail.english_keyword}}</div>
+          <div><span class="label">【指导者】</span><span>{{detail.director_name}}</span></div>
+          <div><span class="label">【译者】</span><span>{{detail.translator_name}}</span></div>
+          <div><span class="label">【上传者】</span><span>{{detail.applicable_object}}</span></div>
+          <div><span class="label">【上传者单位】</span><span>{{detail.upload_company_id}}</span></div>
+          <div><span class="label">【案例语种】</span><span>{{detail.language}}</span></div>
+          <div><span class="label">【适用对象】</span><span>{{detail.applicable_object}}</span></div>
+          <div><span class="label">【适用课程】</span><span>{{detail.applicable_courses}}</span></div>
+          <div><span class="label">【中文关键词】</span><span>{{detail.chinese_keyword}}</span></div>
+          <div><span class="label">【英文关键词】</span><span>{{detail.english_keyword}}</span></div>
           <div>
             <span>【中文摘要】</span>
             <p>{{detail.summary}}</p>
@@ -52,32 +52,51 @@
         </ul>
       </div>
       <div class="comment">
-        <textarea class="comment-input" placeholder="写下你的评论..."></textarea>
+        <textarea class="comment-input" placeholder="写下你的评论..." v-model="content"></textarea>
+        <div class="send-btn">
+          <reCaptcha :sitekey="sitekey" class="reCaptcha" @getValidateCode='getValidateCode' v-model="check"></reCaptcha>
+          <el-button 
+            type="primary" round
+            :disabled="content.length<1 || !check"
+            :loading="formLoading"
+            @click="submit">
+            发布
+          </el-button>
+        </div>
         <h3 class="comment-title">
           <div>
             <span>精彩评论</span>
-            <span class="num">3</span>
+            <span class="num">{{total}}</span>
           </div>
         </h3>
         <div class="comment-list">
-          <div class="comm-item">
+          <div class="comm-item" v-for="(item, index) in list" :key="index">
             <img src="~/assets/images/personal/head-pic.png" class="avater">
             <div class="comment-content">
-              <span class="user-name">爱笑的架构师</span>
-              <div class="time">2020-11-25 10:30</div>
-              <div class="content">话说这条是广告</div>
+              <span class="user-name">{{item.author_name}}</span>
+              <div class="time">{{item.create_time}}</div>
+              <div class="content">{{item.content}}</div>
             </div>
           </div>
         </div>
+        <el-pagination
+          v-if="list>10"
+          style="text-align: center; margin: 30px 0"
+          layout="prev, pager, next"
+          :page-size="params.page_size"
+          :current-page="params.page_no"
+          @current-change="handleCurrentChange"
+          :total="total">
+        </el-pagination>
       </div>
     </div>
 	</section>
 </template>
 
 <script>
-	import axios from 'axios'
+  import axios from 'axios'
+  import reCaptcha from '../login/reCaptcha'
 	import BreadCrumbs from '~/components/common/breadCrumbs'
-
 	export default {
 		data (){
 			return {
@@ -95,57 +114,110 @@
 						link: ''
 					}
         ],
+        sitekey: '6LeOsOQZAAAAAEgZzkD2ZE6kuR0vOFE8F2KqZB4x',
         detail: '',
         catList: [],
-        dialogVisible: false,
         formLoading: false,
-        dialogForm: {
-          operating: '',
-          id: ''
-        }
+        list: [],
+        total: 0,
+        params: {
+          "case_id": '',
+          "page_no": 1,
+          "page_size": 10
+        },
+        content: '',
+        check: ''
 			}
     },
 		components: {
-			BreadCrumbs
-		},
+      BreadCrumbs,
+      reCaptcha
+    },
+    head() {
+      return {
+        // script: [
+        //   {
+        //     type: 'text/javascript',
+        //     src:'https://recaptcha.net/recaptcha/api.js?onload=ReCaptchaLoaded&render=explicit',
+        //     body: true
+        //   }
+        // ]
+      }
+    },
 		async asyncData ({params,query,store}){
 			// let id = params.id;
-      // //详情数据
-      // let articleData = await axios.get(`${process.env.BASE_URL}/api/article/text?id=${id}`);
+      //评论列表
+      // let articleData = await axios.get(`${process.env.BASE_URL}/api/comment/case_comment?case_id=${id}`);
 
       // return {
       //   articleData: articleData.data.data,
       // }
     },
     methods: {
+      getValidateCode(value) {
+        this.check = value
+      },
       filterCate (val) {
         let cate = this.$store.state.cateData.data.filter(item => item.id==val )
         return cate[0].menu_name
       },
-      showDialog () {
-        this.dialogVisible = true
-        this.dialogForm.id = this.detail.id
-      },
       submit () {
+        if (!this.$store.state.userInfo.Name) {
+          this.$message.warning('请登录后进行操作!')
+          return
+        }
         this.formLoading = true
-        this.$ajax.get('/api/case/check_case', this.dialogForm).then( res => {
+        let params = {
+          case_id: this.params.case_id,
+          check: this.check,
+          content: this.content
+        }
+        this.$ajax.get('/api/comment/add', params).then( res => {
           this.formLoading = false
           if (res.code === 0) {
-            this.$message.success("操作成功");
-            this.dialogVisible = false
-            setTimeout(()=>{
-              this.$router.go(-1)
-            },1000)
+            this.$message.success("发布成功");
+            tis.getData()
+          }
+        })
+      },
+      handleCurrentChange(val){
+        this.params.page_no = val
+        this.getData()
+      },
+      getData () {
+        this.$ajax.get('/api/comment/case_comment', this.params).then( res => {
+          this.formLoading = false
+          if (res.code === 0) {
+            this.list = res.data.list || []
+            this.total = res.data.page.total
           }
         })
       }
     },
 		mounted (){
       this.detail = JSON.parse(sessionStorage.getItem('caseDetail'))
+      this.params.case_id = this.detail.id
+      this.getData()
 		}
 	}
 </script>
-
+<style>
+.case-main .rc-anchor{
+  box-shadow:none;
+}
+.case-main .rc-anchor-light.rc-anchor-normal{
+  border: 0;
+}
+.case-main .rc-anchor-light{
+  background: transparent;
+}
+.g-recaptcha {
+  transform:scale(0.77);
+  -webkit-transform:scale(0.77);
+  transform-origin:0 0;
+  -webkit-transform-origin:0 0;
+}
+</style>
 <style type="text/css" scoped>
 	/*面包屑部分*/
   div#bread-nav {
@@ -218,7 +290,7 @@
     font-size: 15px;
     color: #404040;
   }
-  .case-detail span{
+  .case-detail .label{
     font-size: 14px;
     font-weight: 600;
     margin-right: 10px;
@@ -340,5 +412,17 @@
     font-size: 16px;
     line-height: 1.5;
     word-break: break-word;
+  }
+  .send-btn{
+    overflow: hidden;
+  }
+  .send-btn .el-button{
+    margin-top: 16px;
+    float: right;
+  }
+  .send-btn .reCaptcha{
+    width: 304px;
+    float: left;
+    margin-top: 15px;
   }
 </style>

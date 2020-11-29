@@ -26,8 +26,8 @@
             </router-link>
           </div>
           <div class="fr search-box">
-            <el-input placeholder="请输入检索关键字" v-model="searchVal" class="input-with-select">
-              <el-button slot="append" icon="el-icon-search">搜索</el-button>
+            <el-input placeholder="请输入案例关键字" v-model="searchVal" class="input-with-select">
+              <el-button slot="append" icon="el-icon-search" @click="search">搜索</el-button>
             </el-input>
           </div>
         </div>
@@ -109,6 +109,14 @@
         this.$ajax.get('/api/login_out').then(res => {
           this.$store.commit('setUserInfo', {})
           location. reload()
+        })
+      },
+      search () {
+        this.$router.push({
+          path: 'cases',
+          query: {
+            keyword: this.searchVal
+          }
         })
       }
 		}

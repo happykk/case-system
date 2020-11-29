@@ -119,24 +119,6 @@
 			}
 		},
 		mounted (){
-	      this.$nextTick(function (){
-	        window._bd_share_config = {
-	           "common": {
-				        "bdSnsKey": {},
-				        "bdText": "",
-				        "bdMini": "1",
-				        "bdMiniList": ["qzone", "tsina", "weixin", "sqq", "duitang", "hx", "fx", "youdao", "sdo", "qingbiji", "people", "xinhua", "mail", "isohu", "yaolan", "wealink", "ty", "iguba", "fbook", "twi", "linkedin", "h163", "evernotecn", "copy", "print"],
-				        "bdPic": "",
-				        "bdStyle": "2",
-				        "bdSize": "32"
-				    },
-				    "share": {}
-	        };
-	        const s = document.createElement('script');
-	        s.type = 'text/javascript';
-	        s.src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5);
-	        document.body.appendChild(s);
-	      })
 		}
 	}
 </script>

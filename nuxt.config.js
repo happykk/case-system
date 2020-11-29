@@ -93,7 +93,7 @@ module.exports = {
   //   Disallow: '/',
   //   Sitemap: 'http://www.visney.cn/sitemap.xml'
   // },
-  plugins: ["@/plugins/element-ui", '@/plugins/axios'],
+  plugins: ["@/plugins/element-ui", '@/plugins/axios', {src:'@/plugins/storeCache',ssr: false}],
   env: {
     BASE_URL: process.env.BASE_URL,
     NODE_ENV: process.env.NODE_ENV
