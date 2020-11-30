@@ -63,6 +63,7 @@ const actions = {
 		// 	commit('setHeadJobNav',headJobNav.data);
 		// 案例分类
 		let cateData = await axios(`${state.basicUrl}/api/menu?type=3`);
+		debugger
 		commit('setCateData',cateData.data);
 	}
 };

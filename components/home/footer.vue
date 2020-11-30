@@ -91,11 +91,11 @@ a:last-child{
 .link-list{
   background-color: #ffffff;
   padding: 5px;
-  width: 214px;
+  width: 100%;
   position: absolute;
-  right: -1px;
+  right: 0;
   bottom: 100%;
-  left: -1px;
+  left: 0;
   display: none;
   max-height: 280px;
   overflow: auto;

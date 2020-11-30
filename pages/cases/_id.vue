@@ -58,7 +58,7 @@
       <div class="comment">
         <textarea class="comment-input" placeholder="写下你的评论..." v-model="content"></textarea>
         <div class="send-btn">
-          <reCaptcha :sitekey="sitekey" class="reCaptcha" @getValidateCode='getValidateCode' v-model="check"></reCaptcha>
+          <reCaptcha :sitekey="sitekey" id="g-recaptcha" ref="gRecaptcha" @getValidateCode='getValidateCode' v-model="check"></reCaptcha>
           <el-button 
             type="primary" round
             :disabled="content.length<1 || !check"
@@ -180,8 +180,14 @@
           this.formLoading = false
           if (res.code === 0) {
             this.$message.success("发布成功");
-            tis.getData()
+            this.check = ''
+            this.$refs.gRecaptcha.reset()
+            this.content = ''
+            this.getData()
           }
+        }).catch(() =>{
+          this.check = ''
+          this.$refs.gRecaptcha.reset()
         })
       },
       handleCurrentChange(val){
@@ -198,13 +204,6 @@
         })
       },
       viewContent (type) {
-        // this.$router.push({
-        //   path: '/viewCase',
-        //   query: {
-        //     type: type,
-        //     case_id: this.params.case_id
-        //   }
-        // })
         const newurl = this.$router.resolve({
           path: '/viewcase',
           query: {
@@ -232,63 +231,27 @@
 .case-main .rc-anchor-light{
   background: transparent;
 }
-.g-recaptcha {
+#g-recaptcha {
+  width: 304px;
+  float: left;
+  margin-top: 15px;
   transform:scale(0.77);
   -webkit-transform:scale(0.77);
   transform-origin:0 0;
   -webkit-transform-origin:0 0;
+  position: relative;
 }
+/* #g-recaptcha::after {
+  content: '';
+  width: 109px;
+  height: 70px;
+  background: #f9f9f9;
+  position: absolute;
+  right: 3px;
+  top: 2px;
+} */
 </style>
 <style type="text/css" scoped>
-	/*面包屑部分*/
-  div#bread-nav {
-    width:  100%;
-    height:  auto;
-  }
-  #bread-nav{
-    position: relative;
-  }
-  #bread-nav .brand-nav-content{
-    float: left;
-  }
-  .brand-nav-box {
-    width:  1200px;
-    margin:  0 auto;
-    color:  #858585;
-    font-size: 14px;
-    text-align:  left;
-    line-height: 70px;
-  }
-  .brand-nav-content{
-    float: left;
-  }
-  .brand-nav-title {
-    float:  left;
-  }
-  .brand-nav-list {
-    float:  left;
-    overflow:  hidden;
-  }
-  .brand-nav-list ul {
-    overflow: hidden;
-  }
-  .brand-nav-list ul li {
-    float:  left;
-    padding: 0 5px;
-  }
-  .brand-nav-list ul li a {
-    display:  block;
-    width:  100%;
-    height:  100%;
-    color: #858585;
-  }
-  .brand-nav-list ul li:last-child a {
-    color: #22202b;
-  }
-  .brand-nav-list ul li a:hover {
-    color: #22202b;
-  }
-  /*面包屑部分结束*/
   .case-main .mod-block{
     overflow: hidden;
     padding: 20px 0;
@@ -452,10 +415,5 @@
   .send-btn .el-button{
     margin-top: 16px;
     float: right;
-  }
-  .send-btn .reCaptcha{
-    width: 304px;
-    float: left;
-    margin-top: 15px;
   }
 </style>

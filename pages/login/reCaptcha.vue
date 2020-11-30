@@ -1,5 +1,7 @@
 <template>
-    <div ref="grecaptcha"></div>
+    <section>
+      <div ref="grecaptcha"></div>
+    </section>
 </template>
 <script>
 export default {
@@ -15,9 +17,12 @@ export default {
         * 所以根据字符串判断验证情况
         */
         callback: res => {
-            this.$emit("getValidateCode", res)
+          this.$emit("getValidateCode", res)
         }
       });
+    },
+    reset () {
+      window.grecaptcha.reset()
     }
   },
   mounted() {
@@ -26,6 +31,7 @@ export default {
     script.src =
       "https://recaptcha.net/recaptcha/api.js?onload=ReCaptchaLoaded&render=explicit";
     document.head.appendChild(script);
+    
   }
 };
 </script>

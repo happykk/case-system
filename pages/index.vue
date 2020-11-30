@@ -292,6 +292,10 @@
 }
 .case-list .list-left{
   width: 50%;
+  margin-right: 20px;
+}
+.case-list .list-right{
+  width: 50%;
 }
 .case-list .case-list-item{
   margin-top: 15px;

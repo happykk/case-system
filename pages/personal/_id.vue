@@ -72,11 +72,11 @@
           </tr>
            <tr>
             <th>查看全文：</th>
-            <td><a href="" target="_blank">查看</a></td>
+            <td><span @click="viewContent(1)">查看</span></td>
           </tr>
           <tr>
             <th>查看案例使用说明：</th>
-            <td><a href="" target="_blank">查看</a></td>
+            <td><span @click="viewContent(2)">查看</span></td>
           </tr>
         </tbody>
       </table>
@@ -174,6 +174,16 @@
             },1000)
           }
         })
+      },
+      viewContent (type) {
+        const newurl = this.$router.resolve({
+          path: '/viewcase',
+          query: {
+            type: type,
+            case_id: this.detail.id
+          }
+        })
+        window.open(newurl.href,'_blank')
       }
     },
 		mounted (){
@@ -185,54 +195,6 @@
 
 <style type="text/css" scoped>
 	/*面包屑部分*/
-  div#bread-nav {
-    width:  100%;
-    height:  auto;
-  }
-  #bread-nav{
-    position: relative;
-  }
-  #bread-nav .brand-nav-content{
-    float: left;
-  }
-  .brand-nav-box {
-    width:  1200px;
-    margin:  0 auto;
-    color:  #858585;
-    font-size: 14px;
-    text-align:  left;
-    line-height: 70px;
-  }
-  .brand-nav-content{
-    float: left;
-  }
-  .brand-nav-title {
-    float:  left;
-  }
-  .brand-nav-list {
-    float:  left;
-    overflow:  hidden;
-  }
-  .brand-nav-list ul {
-    overflow: hidden;
-  }
-  .brand-nav-list ul li {
-    float:  left;
-    padding: 0 5px;
-  }
-  .brand-nav-list ul li a {
-    display:  block;
-    width:  100%;
-    height:  100%;
-    color: #858585;
-  }
-  .brand-nav-list ul li:last-child a {
-    color: #22202b;
-  }
-  .brand-nav-list ul li a:hover {
-    color: #22202b;
-  }
-  /*面包屑部分结束*/
   .mod-block{
     background: #fff;
     overflow: hidden;
@@ -252,6 +214,9 @@
   .case-detail .infotable td{
     background: #f4f5f9;
     padding-left: 10px;
+  }
+  .case-detail .infotable td span{
+    cursor: pointer;
   }
   .detail-foot{
     width: 800px;

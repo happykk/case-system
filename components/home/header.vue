@@ -107,7 +107,7 @@
       },
       toPersonal () {
         this.isShowPopMenu = false
-        this.$router.push('personal')
+        this.$router.push('/personal')
       },
       loginOut () {
         this.isShowPopMenu = false
