@@ -261,6 +261,9 @@ export default {
       })
     } else {
       this.userInfo = this.$store.state.userInfo
+      if (this.userInfo.Check) {
+        this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+      }
     }
   }
 }

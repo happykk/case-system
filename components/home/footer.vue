@@ -18,12 +18,12 @@
           </div>
         </div>
       </div>
-      <div class="friend-links fr" @click="show" ref="box">
+      <div class="friend-links fr" ref="box">
         <span class="label">友情链接</span>
         <i class="el-icon-arrow-down fr"></i>
-        <ul class="link-list" v-if="showLink">
-          <li v-for="(item, index) in friendLink" :key="index" @click="toOutWeb(item.Link)">
-            {{ item.CollegeName }}
+        <ul class="link-list">
+          <li v-for="(item, index) in friendLink" :key="index">
+            <span @click="toOutWeb(item.Link)">{{ item.CollegeName }}</span>
           </li>
         </ul>
       </div>
@@ -71,11 +71,15 @@ a:last-child{
   border-left: 1px solid rgba(255,255,255,.1);
 }
 .friend-links{
-  width: 214px;
+  width: 216px;
   height: 24px;
   color: #333;
   background-color: #ffffff;
   cursor: pointer;
+  position: relative;
+}
+.friend-links:hover .link-list {
+  display: block;
 }
 .label{
   line-height: 24px;
@@ -88,10 +92,29 @@ a:last-child{
   background-color: #ffffff;
   padding: 5px;
   width: 214px;
+  position: absolute;
+  right: -1px;
+  bottom: 100%;
+  left: -1px;
+  display: none;
+  max-height: 280px;
+  overflow: auto;
+  border: 1px solid #b2b2b2;
 }
-li{
+.link-list li{
   padding: 5px 0;
-  border-top: 1px solid #ccc;
+}
+.friend-links .link-list li span{
+  color: #333;
+  cursor: pointer;
+  display: block;
+}
+.links-list li:first-child {
+  border-top: 0 none;
+}
+.friend-links .link-list span:hover {
+    background: #535353;
+    color: #ffffff;
 }
 
 </style>
