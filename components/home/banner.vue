@@ -1,5 +1,5 @@
 <template>
-	<div class="banner">
+	<div class="banner" :class="{'isHome': isHome}">
     <el-carousel
       trigger="click"
       height="600px"
@@ -27,10 +27,16 @@
 		},
 		data (){
 			return {
-				indicatorStatus: 'inside'
+        indicatorStatus: 'inside',
+        isHome: true
 			}
 		},
 		created (){
+      if(this.$route.params.tag === undefined && this.$route.fullPath === '/'){
+        this.isHome = true
+      }else {
+        this.isHome = false
+      }
 		},
 		methods: {
     }
@@ -39,8 +45,12 @@
 
 <style scoped>
 .banner{
-  margin-top: -40px;
+  width: 1200px;
+  margin: 0 auto;
   position: relative;
+}
+.isHome {
+  margin-top: -40px;
 }
 .banner .el-carousel__button {
   opacity: 1;

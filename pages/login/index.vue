@@ -14,7 +14,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
-          <el-button >注册</el-button>
+          <el-button @click="toRegister">注册</el-button>
           <span class="forget" @click="toUpdatePass">忘记密码？</span>
         </el-form-item>
       </el-form>
@@ -95,6 +95,9 @@ export default {
           type: 1
         }
       })
+    },
+    toRegister () {
+      this.$router.push('/login/register')
     }
   },
   mounted () {

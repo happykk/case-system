@@ -31,7 +31,7 @@
             </el-input>
           </div>
         </div>
-				<div class="i-h-nav">
+				<div class="i-h-nav" :class="{'isHome': isHome}">
           <div class="center">
             <router-link
               :to="item.link"
@@ -81,7 +81,8 @@
         ],
         activeIndex: 0,
         searchVal: '',
-        isShowPopMenu: false
+        isShowPopMenu: false,
+        isHome: true
 			}
 		},
 		computed: {
@@ -97,6 +98,11 @@
       }
     },
 		mounted (){
+      if(this.$route.params.tag === undefined && this.$route.fullPath === '/'){
+        this.isHome = true
+      }else {
+        this.isHome = false
+      }
 		},
 		methods: {
 			changeIndex (index) {
@@ -188,8 +194,8 @@
     background-color: #136fe1;
     box-shadow: 0 4px 4px 0 rgba(19, 59, 40, 0.25);
   }
-  .i-h-nav.home{
-    background-color:rgba(46,46,48,.5);
+  .i-h-nav.isHome{
+    background-color:rgba(46,46,48,.5)!important;
   }
   .i-h-nav .center {
     width: 1200px;

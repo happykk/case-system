@@ -25,6 +25,8 @@ import {
   Step,
   Upload,
   Radio,
+  RadioGroup,
+  RadioButton
 } from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/en'
 
@@ -54,6 +56,8 @@ const components = [
   Step,
   Upload,
   Radio,
+  RadioGroup,
+  RadioButton
 ];
 
 const Element = {

@@ -144,17 +144,12 @@ a:last-child{
             link: '/service/4'
           }
         ],
-        showLink: false,
         friendLink: [],
         value: ''
       }
     },
     methods: {
-      show () {
-        this.showLink = !this.showLink
-      },
       toOutWeb (url) {
-        this.showLink = false
         window.open(url,"_blank");
       }
     },
@@ -165,11 +160,6 @@ a:last-child{
       this.$ajax.get('/api/friendly_link').then(res => {
         this.friendLink = res.data
       })
-      // document.addEventListener('click',(e)=>{
-      //   if(!this.$refs.box.contains(e.target)){
-      //     this.showLink = false;
-      //   }
-      // })
 		}
 	}
 </script>

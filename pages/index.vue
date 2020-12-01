@@ -22,14 +22,12 @@
                   </div>
                   <div class="list-info">
                     <p>{{item.desc}}</p>
-                    <!-- <nuxt-link target="_blank" 
-                      :to="{name: 'news-newsView-id',params:{id:item.id}}">
-                    </nuxt-link> -->
-                    <a v-if="index==0" class="view-all fr" href="#">[查看全文]</a>
+                    <nuxt-link target="_blank" v-if="index==0" class="view-all fr" 
+                      :to="{name: 'news-newsView-id',params:{id:item.id}}">[查看全文]
+                    </nuxt-link>
                   </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
@@ -170,15 +168,6 @@
       }
     },
     mounted () {
-      // this.$ajax.get('/api/case/excellent').then( res => {
-      //   for (let x = 0; x < res.data.list.length; x++) {
-      //     if (x % 2) {
-      //       this.rightCaseData.push(res.data.list[x])
-      //     } else {
-      //       this.leftCaseData.push(res.data.list[x])
-      //     }
-      //   }
-      // })
     }
   }
 </script>
