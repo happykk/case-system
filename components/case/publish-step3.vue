@@ -4,9 +4,7 @@
       <div class="mod-toolbar">
         <el-row class="img">
           <img src="../../assets/images/success.png" />
-        </el-row>
-        <el-row class="success">
-          <div>恭喜您,商品发布成功！</div>
+          <div>案例上传成功，等待审核！</div>
         </el-row>
       </div>
     </section>

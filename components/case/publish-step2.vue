@@ -15,7 +15,7 @@
       </el-upload>
     </div>
     <div class="form-item">
-      <div class="label require-label">案例正文</div>
+      <div class="label require-label">使用说明</div>
       <el-upload
         ref="uploadDesc"
         accept=".pdf"

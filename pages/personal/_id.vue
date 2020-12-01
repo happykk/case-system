@@ -12,7 +12,7 @@
           </tr>
           <tr>
             <th>分类：</th>
-            <td>{{detail.cat_id}}</td>
+            <td>{{filterCate(detail.cat_id)}}</td>
           </tr>
           <tr>
             <th>案例作者：</th>
@@ -60,11 +60,11 @@
           </tr>
           <tr>
             <th>上传者：</th>
-            <td>{{detail.applicable_object}}</td>
+            <td>{{detail.upload_name}}</td>
           </tr>
-          <tr>
+          <tr v-if="companyList.length>0">
             <th>上传者单位：</th>
-            <td>{{detail.upload_company_id}}</td>
+            <td>{{filterCompany(detail.upload_company_id)}}</td>
           </tr>
           <tr>
             <th>案例入库时间：</th>
@@ -107,7 +107,7 @@
 <script>
 	import axios from 'axios'
 	import BreadCrumbs from '~/components/common/breadCrumbs'
-
+  import { Loading } from 'element-ui'
 	export default {
 		data (){
 			return {
@@ -127,6 +127,7 @@
         ],
         detail: '',
         catList: [],
+        companyList: [],
         dialogVisible: false,
         formLoading: false,
         dialogForm: {
@@ -153,10 +154,13 @@
       // }
     },
     methods: {
-      getCateList () {
-        this.$ajax.get('/api/menu', {type: 3}).then( res => {
-          this.catList = res.data
-        })
+      filterCate (val) {
+        let cate = this.catList.filter(item => item.id==val )
+        return cate[0].menu_name
+      },
+      filterCompany (val) {
+        let cate = this.companyList.filter(item => item.id==val )
+        return cate[0].menu_name
       },
       showDialog () {
         this.dialogVisible = true
@@ -176,19 +180,33 @@
         })
       },
       viewContent (type) {
-        const newurl = this.$router.resolve({
-          path: '/viewcase',
-          query: {
-            type: type,
-            case_id: this.detail.id
-          }
+        const loading = Loading.service({ fullscreen: true });
+        this.$ajax.get('/api/case/read',{
+          type: type,
+          case_id: this.params.case_id
+        }).then(res => {
+          this.total = res.data
+          this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+            loading.close();
+          });
+          const newurl = this.$router.resolve({
+            path: '/viewcase',
+            query: {
+              _t: this.total,
+              type: type,
+              case_id: this.params.case_id
+            }
+          })
+          window.open(newurl.href,'_blank')
         })
-        window.open(newurl.href,'_blank')
       }
     },
-		mounted (){
+		async mounted (){
+      let companyData = await this.$ajax.get('/api/menu', {type: 2})
+      let cateData = await this.$ajax.get('/api/menu', {type: 3})
+      this.companyList = companyData.data
+      this.catList = cateData.data
       this.detail = JSON.parse(sessionStorage.getItem('caseDetail'))
-      this.getCateList()
 		}
 	}
 </script>

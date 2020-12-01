@@ -50,14 +50,15 @@ export default {
     }
   },
   mounted () {
+    this.total = this.$route.query._t
     this.case_id = this.$route.query.case_id
     this.type = this.$route.query.type
-    this.$ajax.get('/api/case/read',{
-      case_id: this.case_id,
-      type: this.type
-    }).then(res => {
-      this.total = res.data
-    })
+    // this.$ajax.get('/api/case/read',{
+    //   case_id: this.case_id,
+    //   type: this.type
+    // }).then(res => {
+    //   this.total = res.data
+    // })
   }
 };
 </script>

@@ -8,20 +8,20 @@
         <h3 class="title">{{detail.case_name}}</h3>
         <div class="case-detail">
           <div class="line">
+            <span class="label">作者</span>
+            <span class="value">{{detail.author}}</span>
+          </div>
+          <div class="line" v-if="companyList.length>0">
+            <span class="label">作者单位</span>
+            <span class="value">{{filterCompany(detail.upload_company_id)}}</span>
+          </div>
+          <div class="line">
             <span class="label">指导者</span>
-            <span class="value">{{detail.director_name}}</span>
+            <span class="value">{{detail.author_company}}</span>
           </div>
           <div class="line">
             <span class="label">译者</span>
             <span class="value">{{detail.translator_name}}</span>
-          </div>
-          <div class="line">
-            <span class="label">上传者</span>
-            <span class="value">{{detail.applicable_object}}</span>
-          </div>
-          <div class="line">
-            <span class="label">上传者单位</span>
-            <span class="value">{{detail.upload_company_id}}</span>
           </div>
           <div class="line">
             <span class="label">案例语种</span>
@@ -127,7 +127,8 @@
 <script>
   import axios from 'axios'
   import reCaptcha from '../login/reCaptcha'
-	import BreadCrumbs from '~/components/common/breadCrumbs'
+  import BreadCrumbs from '~/components/common/breadCrumbs'
+  import { Loading } from 'element-ui'
 	export default {
 		data (){
 			return {
@@ -157,7 +158,8 @@
           "page_size": 10
         },
         content: '',
-        check: ''
+        check: '',
+        companyList: [],
 			}
     },
 		components: {
@@ -178,10 +180,10 @@
 		async asyncData ({params,query,store}){
 			// let id = params.id;
       //评论列表
-      // let articleData = await axios.get(`${process.env.BASE_URL}/api/comment/case_comment?case_id=${id}`);
+      // let companyData = await axios.get(`${process.env.BASE_URL}/api/menu?type=2`);
 
       // return {
-      //   articleData: articleData.data.data,
+      //   companyList: companyData.data.data,
       // }
     },
     methods: {
@@ -190,6 +192,10 @@
       },
       filterCate (val) {
         let cate = this.$store.state.cateData.data.filter(item => item.id==val )
+        return cate[0].menu_name
+      },
+      filterCompany (val) {
+        let cate = this.companyList.filter(item => item.id==val )
         return cate[0].menu_name
       },
       submit () {
@@ -231,17 +237,38 @@
         })
       },
       viewContent (type) {
-        const newurl = this.$router.resolve({
-          path: '/viewcase',
-          query: {
-            type: type,
-            case_id: this.params.case_id
-          }
+        const loading = Loading.service({ fullscreen: true });
+        this.$ajax.get('/api/case/read',{
+          type: type,
+          case_id: this.params.case_id
+        }).then(res => {
+          this.total = res.data
+          this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+            loading.close();
+          });
+          const newurl = this.$router.resolve({
+            path: '/viewcase',
+            query: {
+              _t: this.total,
+              type: type,
+                case_id: this.params.case_id
+            }
+          })
+          window.open(newurl.href,'_blank')
+          // this.$router.push({
+          //   path: '/viewcase',
+          //   query: {
+          //     _t: this.total,
+          //     type: type,
+          //     case_id: this.params.case_id
+          //   }
+          // })
         })
-        window.open(newurl.href,'_blank')
       }
     },
-		mounted (){
+		async mounted (){
+      let companyData = await this.$ajax.get('/api/menu', {type: 2})
+      this.companyList = companyData.data
       this.detail = JSON.parse(sessionStorage.getItem('caseDetail'))
       this.params.case_id = this.detail.id
       this.getData()

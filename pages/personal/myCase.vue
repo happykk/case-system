@@ -81,7 +81,7 @@ export default {
         {name: '上传案例', link: '/personal/creatCase'},
         {name: '案例审核', link: '/personal/caseInfo'}
       ],
-      tablist: ['已通过','未通过'],
+      tablist: ['已通过','未通过','审核中'],
       userInfo: '',
       current: 0,
       total: 0,
@@ -133,6 +133,10 @@ export default {
       let params = Object.assign({}, this.searchForm)
       if (this.current === 1) {
         params.logic_check = 2
+      } else if(this.current === 2) {
+        params.logic_check = 0
+      } else {
+        params.logic_check = 1
       }
       this.$ajax.get('/api/case/my_case', params).then( (res) => {
         this.caseData.list = res.data.list || []
