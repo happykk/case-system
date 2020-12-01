@@ -1,12 +1,12 @@
 <template>
 	<section class="container">
 		<!-- 面包屑部分 -->
-    <BreadCrumbs :list="titles"></BreadCrumbs>
 		<!-- 面包屑部分结束 -->
     <div class="news-main">
+      <BreadCrumbs :list="titles" class="breadCrumbs"></BreadCrumbs>
       <ul class="recom-info-content">
         <li class="recom-info-list" v-for="(list) in recomInfo" :key="list.id">
-          <nuxt-link target="_blank" class="recom-info-title" :to="{name: 'news-newsView-id',params:{id:list.id}}">
+          <nuxt-link target="_blank" class="recom-info-title" :to="{name: 'news-newsView-id',query:{id:list.id, type: 2}}">
             <i></i>
             <h2>{{list.title}}</h2>
             <span class="recom-info-times">{{list.update_time.split(' ')[0]}}</span>
@@ -99,18 +99,30 @@
     width:  1200px;
     height:  auto;
     margin:  0 auto;
-    padding-bottom: 50px;
+    padding: 0 30px 50px;
     overflow: hidden;
+    margin-top: 30px;
+    box-shadow: 0px 0px 43px rgba(141,142,142,0.17);
+    -webkit-box-shadow: 0 0 43px rgba(141,142,142,0.17);
+    -moz-box-shadow: 0 0 43px rgba(141,142,142,0.17);
+    overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
+  }
+  .breadCrumbs{
+    border-bottom: 1px solid #e4e4e4;
+    padding: 22px 0 4px;
   }
   .recom-info-content {
     overflow:  hidden;
-    margin-bottom: 50px;
+    margin: 10px 0 50px;
     padding: 0 30px;
   }
   .recom-info-content li{
-    margin-top: 20px;
     font-size: 16px;
-    color: #414141;
+    color: rga(102,102,102);
+    line-height: 40px;
+    border-bottom: 1px dashed #cccccc;
   }
   .recom-info-title:hover{
     text-decoration: underline;

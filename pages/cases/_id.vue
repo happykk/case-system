@@ -7,22 +7,49 @@
       <div class="article">
         <h3 class="title">{{detail.case_name}}</h3>
         <div class="case-detail">
-          <div><span class="label">【指导者】</span><span>{{detail.director_name}}</span></div>
-          <div><span class="label">【译者】</span><span>{{detail.translator_name}}</span></div>
-          <div><span class="label">【上传者】</span><span>{{detail.applicable_object}}</span></div>
-          <div><span class="label">【上传者单位】</span><span>{{detail.upload_company_id}}</span></div>
-          <div><span class="label">【案例语种】</span><span>{{detail.language}}</span></div>
-          <div><span class="label">【适用对象】</span><span>{{detail.applicable_object}}</span></div>
-          <div><span class="label">【适用课程】</span><span>{{detail.applicable_courses}}</span></div>
-          <div><span class="label">【中文关键词】</span><span>{{detail.chinese_keyword}}</span></div>
-          <div><span class="label">【英文关键词】</span><span>{{detail.english_keyword}}</span></div>
-          <div>
-            <span class="label">【中文摘要】</span>
-            <p>{{detail.summary}}</p>
+          <div class="line">
+            <span class="label">指导者</span>
+            <span class="value">{{detail.director_name}}</span>
           </div>
-          <div>
-            <span class="label">【英文摘要】</span>
-            <p>{{detail.english_summary}}</p>
+          <div class="line">
+            <span class="label">译者</span>
+            <span class="value">{{detail.translator_name}}</span>
+          </div>
+          <div class="line">
+            <span class="label">上传者</span>
+            <span class="value">{{detail.applicable_object}}</span>
+          </div>
+          <div class="line">
+            <span class="label">上传者单位</span>
+            <span class="value">{{detail.upload_company_id}}</span>
+          </div>
+          <div class="line">
+            <span class="label">案例语种</span>
+            <span class="value">{{detail.language}}</span>
+          </div>
+          <div class="line">
+            <span class="label">适用对象</span>
+            <span class="value">{{detail.applicable_object}}</span>
+          </div>
+          <div class="line">
+            <span class="label">适用课程</span>
+            <span class="value">{{detail.applicable_courses}}</span>
+          </div>
+          <div class="line">
+            <span class="label">中文关键词</span>
+            <span  lass="value">{{detail.chinese_keyword}}</span>
+          </div>
+          <div class="line">
+            <span class="label">英文关键词</span>
+            <span class="value">{{detail.english_keyword}}</span>
+          </div>
+          <div class="line">
+            <span class="label">中文摘要</span>
+            <p class="value">{{detail.summary}}</p>
+          </div>
+          <div class="line">
+            <span class="label">英文摘要</span>
+            <p class="value">{{detail.english_summary}}</p>
           </div>
           <div class="view-link">
             <span class="view-content" @click="viewContent(1)">查看全文</span>
@@ -254,23 +281,25 @@
 <style type="text/css" scoped>
   .case-main .mod-block{
     overflow: hidden;
-    padding: 20px 0;
   }
   .article{
     float: left;
     width: 900px;
     background-color: #fff;
-    padding: 32px;
+    padding: 28px;
     border-radius: 4px;
     margin-bottom: 10px;
   }
   .title{
     font-size: 24px;
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
   }
-  .view-link{
+  .case-detail .view-link{
     text-align: center;
+    margin-top: 40px;
   }
   .view-link>span{
     display: inline-block;
@@ -286,19 +315,9 @@
     font-size: 15px;
     color: #404040;
   }
-  .case-detail .label{
-    font-size: 14px;
-    font-weight: 600;
-    margin-right: 10px;
-    color: #333;
-  }
-  .case-detail p{
-    margin-top: 5px;
-    line-height: 24px;
-  }
   .case-intro{
     border-radius: 4px;
-    padding: 16px;
+    padding: 20px 16px;
     float: right;
     width: 280px;
     background: #fff;
@@ -335,7 +354,7 @@
   .case-intro .intro-block li .label{
     margin-top: 2px;
     display: block;
-    color: #999;
+    color: #8590a6;
   }
   .comment{
     width: 900px;
@@ -415,5 +434,18 @@
   .send-btn .el-button{
     margin-top: 16px;
     float: right;
+  }
+  .line{
+    display: flex;
+    line-height: 26px;
+  }
+  .line .label{
+    width: 100px;
+    color: #767676;
+    font-size: 14px;
+  }
+  .line .value{
+    flex: 1;
+    font-size: 15px;
   }
 </style>

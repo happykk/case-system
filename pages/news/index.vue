@@ -2,14 +2,15 @@
 	<section class="container">
 		<!-- <NewsBanner></NewsBanner> -->
 		<!-- 面包屑部分 -->
-		<BreadCrumbs :list="titles"></BreadCrumbs>
+		
 		<!-- 面包屑部分结束 -->
     <div class="news-main">
       <div class="recom-info-content">
+        <BreadCrumbs :list="titles" class="breadCrumbs"></BreadCrumbs>
         <ul>
           <li class="recom-info-list" v-for="(list) in recomInfo.list" :key="list.id">
             <div class="recom-info-title">
-              <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}"><h2>{{list.title}}</h2></nuxt-link>
+              <nuxt-link target="_blank" :to="{name: 'news-newsView-id',query:{id:list.id}}"><h2>{{list.title}}</h2></nuxt-link>
             </div>
             <div class="recom-info-box">
               <div class="recom-info-img">
@@ -151,7 +152,11 @@
 }
 </style>
 <style scoped>
-	/* 推荐资讯部分 */
+  /* 推荐资讯部分 */
+    .breadCrumbs{
+      border-bottom: 3px solid #136fe1;
+      padding: 22px 0 4px;
+    }
 		.news-main {
       width:  1200px;
       height:  auto;

@@ -67,22 +67,27 @@
           </div>
         </div>
       </div>
-      <div class="case-list">
+      <div class="case-list-box">
         <div class="w">
-          <div class="header-title">
-            <span class="fl">优秀案例</span>
-          </div>
-          <div class="case-list">
-            <div class="list-left">
-              <div class="case-list-item" v-for="(item, index) in leftCaseData" :key="index" @click="toCaseDetail(item)">
+          <div class="case-special">
+            <div class="header-title">
+              <span class="fl">优秀案例</span>
+            </div>
+            <div class="case-list">
+              <div class="case-list-item" v-for="(item, index) in caseSpecial" :key="index" @click="toCaseDetail(item)">
                 <span class="index"><template v-if="index+1<10">0</template>{{index+1}}</span>
                 <p class="ellipsis">{{item.case_name}}</p>
                 <span class="time">[{{item.create_time.split(' ')[0]}}]</span>
               </div>
             </div>
-            <div class="list-right">
-              <div class="case-list-item" v-for="(item, index) in rightCaseData" :key="index" @click="toCaseDetail(item)">
-                <span class="index"><template v-if="index+2<10">0</template>{{index+2}}</span>
+          </div>
+          <div class="case-hot">
+            <div class="header-title">
+              <span class="fl">热门案例</span>
+            </div>
+            <div class="case-list">
+              <div class="case-list-item" v-for="(item, index) in caseHot" :key="index" @click="toCaseDetail(item)">
+                <span class="index"><template v-if="index+1<10">0</template>{{index+1}}</span>
                 <p class="ellipsis">{{item.case_name}}</p>
                 <span class="time">[{{item.create_time.split(' ')[0]}}]</span>
               </div>
@@ -136,23 +141,15 @@
       //首页通知信息
       let notice = await context.app.$ajax.get(`/api/article/list?type=2&page_no=1&page_size=6`)
       let news = await context.app.$ajax.get(`/api/article/list?type=1&page_no=1&page_size=3`)
-      let cases = await context.app.$ajax.get(`/api/case/excellent`)
-      let leftArr = []
-      let rightArr = []
-      for (let x = 0; x < cases.data.list.length; x++) {
-        if (x % 2) {
-          rightArr.push(cases.data.list[x])
-        } else {
-          leftArr.push(cases.data.list[x])
-        }
-      }
+      let cases01 = await context.app.$ajax.get(`/api/case/excellent`)
+      let cases02 = await context.app.$ajax.get(`/api/case/hot`)
       return {
         metaData: metaData,
         bannerData: banner.data,
         noticeData: notice.data.list,
         newsData: news.data.list,
-        leftCaseData: leftArr,
-        rightCaseData: rightArr
+        caseSpecial: cases01.data.list,
+        caseHot: cases02.data.list
       }
     },
     methods: {
@@ -274,16 +271,16 @@
   width: 300px;
   height: 170px;
 }
-.case-list{
+.case-list-box .w{
   display: flex;
   justify-content: space-between;
   margin-bottom: 50px;
 }
-.case-list .list-left{
+.case-special{
   width: 50%;
   margin-right: 20px;
 }
-.case-list .list-right{
+.case-hot{
   width: 50%;
 }
 .case-list .case-list-item{

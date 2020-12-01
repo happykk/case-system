@@ -16,9 +16,9 @@
         </el-form-item>
         <el-form-item prop="role_id" label="身份">
            <el-radio-group v-model="editInfo.role_id" size="medium">
-            <el-radio-button label="0">学生</el-radio-button>
-            <el-radio-button label="1">老师</el-radio-button>
-            <el-radio-button label="2">企业人员</el-radio-button>
+            <el-radio-button label="1">学生</el-radio-button>
+            <el-radio-button label="2">老师</el-radio-button>
+            <el-radio-button label="4">企业</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item prop="phone" label="电话">

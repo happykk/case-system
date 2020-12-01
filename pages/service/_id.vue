@@ -1,21 +1,19 @@
 <template>
-	<section class="cotainer">
-		<!-- 面包屑部分 -->
-		<BreadCrumbs :list="titles"></BreadCrumbs>
-		<!-- 面包屑部分结束 -->
-		<!-- News View details start-->
-		<div id="news-view">
-			<div class="news-view-box">
-				<div class="news-view-details-wrap">
-					<div class="news-view-title-box">
-						<div class="news-view-title"><h1>{{title}}</h1></div>
-					</div>
-					<div class="news-view-details" v-html="articleData.content">
-					</div>
+	<div id="news-view">
+		<div class="news-view-box">
+			<BreadCrumbs :list="titles" class="breadCrumbs"></BreadCrumbs>
+			<div class="news-view-details-wrap">
+				<div class="news-view-title-box">
+					<h2 class="article-title">{{title}}</h2>
+          <p class="article-date">
+            发布日期：{{articleData.update_time.split(' ')[0]}}
+          </p>
+				</div>
+				<div class="news-view-details" v-html="articleData.content">
 				</div>
 			</div>
 		</div>
-	</section>
+	</div>
 </template>
 
 <script>
@@ -65,70 +63,77 @@
 <style type="text/css" scoped>
 	
 	/*News Views details start*/
-		div#news-view {
-			display: -webkit-flex;
-			display: -moz-flex;
-			display: -ms-flex;
-			display: -o-flex;
-			display: flex;
-		    width:  100%;
-		    height:  auto;
-		}
-
 		.news-view-box {
-		    overflow:  hidden;
-		    width:  1200px;
-		    height:  auto;
-		    margin:  0 auto;
+      overflow:  hidden;
+      width:  1200px;
+      height:  auto;
+			margin:  30px auto 0;
+			box-shadow: 0px 0px 43px rgba(141,142,142,0.17);
+			-webkit-box-shadow: 0 0 43px rgba(141,142,142,0.17);
+			-moz-box-shadow: 0 0 43px rgba(141,142,142,0.17);
+			overflow: hidden;
+			background: #fff;
+			border-radius: 4px;
 		}
-
+		.breadCrumbs{
+			border-bottom: 1px solid #e4e4e4;
+      padding: 0 0 10px;
+      margin: 0 20px;
+    }
 		.news-view-title-box {
-		    width:  100%;
-		    height:  auto;
-		    padding:  60px 0 48px;
-		    border-bottom: 2px solid #d5d5d8;
-		    box-sizing:  border-box;
+      margin-top: 36px;
+      line-height: 28px;
+      font-family: "é»‘ä½“";
+      font-size: 24px;
+      font-weight: bold;
+      color: #000000;
+      text-align: center;
 		}
 
-		.news-view-title {
-		    overflow:  hidden;
-		    width:  100%;
-		    height: 68px;
-		    color:  #22202b;
-		    font-size:  30px;
-		    line-height:  68px;
-		    text-align:  center;
-		}
-
-		.news-view-title h1 {
-			 font-size:  30px;
-			 font-weight: normal;
-		}
+		.article-title {
+      margin-top: 36px;
+      line-height: 28px;
+      font-family: "é»‘ä½“";
+      font-size: 24px;
+      font-weight: bold;
+      color: #000000;
+      text-align: center;
+  }
 
 		.news-view-info {
-		    display:  flex;
-		    overflow:  hidden;
-		    width:  100%;
-		    height: 50px;
-		    justify-content:  center;
-		    align-items:  center;
-		    color:  #858585;
-		    font-size:  14px;
-		    text-align:  center;
-		    line-height: 50px;
+      display:  flex;
+      overflow:  hidden;
+      width:  100%;
+      height: 50px;
+      justify-content:  center;
+      align-items:  center;
+      color:  #858585;
+      font-size:  14px;
+      text-align:  center;
+      line-height: 50px;
 		}
 
 		.news-view-info div {
-		    margin: 0 6px;
+      margin: 0 6px;
 		}
 
 		.news-view-details {
-		    overflow:  hidden;
-		    width: 100%;
-		    height:  auto;
-		    padding: 40px 0;
-		    font-size:  14px;
-		    text-align:  left;
-		    line-height:  20px;
-		}
+      width: 100%;
+      height:  auto;
+      font-size:  16px;
+      text-align:  left;
+      line-height:  36px;
+      padding-bottom: 100px;
+      margin: 0 auto;
+      width: 1000px;
+      overflow: hidden;
+    }
+    .article-date {
+      margin-top: 11px;
+      margin-bottom: 10px;
+      font-weight: 400;
+      font-size: 14px;
+      color: #737373;
+      text-align: center;
+    }
 </style>

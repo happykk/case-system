@@ -159,7 +159,7 @@
     margin-right: 5px;
   }
   .i-h-logo {
-    padding: 10px 0;
+    padding: 0 0 10px;
     color: #333;
     position: relative;
     overflow: hidden;
@@ -193,9 +193,6 @@
     height: 40px;
     background-color: #136fe1;
     box-shadow: 0 4px 4px 0 rgba(19, 59, 40, 0.25);
-  }
-  .i-h-nav.isHome{
-    background-color:rgba(46,46,48,.5)!important;
   }
   .i-h-nav .center {
     width: 1200px;

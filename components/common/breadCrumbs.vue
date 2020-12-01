@@ -32,10 +32,6 @@ export default {
 }
 </script>
 <style>
-div#bread-nav {
-    width:  100%;
-    height:  auto;
-  }
   #bread-nav{
     position: relative;
   }
@@ -48,9 +44,9 @@ div#bread-nav {
     color:  #858585;
     font-size: 14px;
     text-align:  left;
-    padding-bottom: 10px;
-    margin-top: 30px;
-    border-bottom: 2px solid #136fe1;
+    /* padding-bottom: 10px; */
+    margin-top: 20px;
+    /* border-bottom: 2px solid #136fe1; */
   }
   .brand-nav-content{
     float: left;
@@ -70,7 +66,7 @@ div#bread-nav {
     padding: 0 5px;
   }
   .brand-nav-list ul li::after{
-    content: '>';
+    content: '/';
     margin-left: 8px;
     width: 20px;
     color: #858585;
