@@ -40,7 +40,7 @@
         </div>
         <div class="bg-box-radius">
           <div class="case-list">
-            <div class="case-item" v-for="(item, index) in caseData.list" :key="index">
+            <div class="case-item" v-for="(item, index) in caseData" :key="index">
               <h3 @click="toCaseDetail(item)">{{item.case_name}}</h3>
               <div class="case-desc">{{item.summary}}</div>
               <div class="case-info">
@@ -50,13 +50,13 @@
               </div>
             </div>
           </div>
-          <div class="empty" v-if="caseData.list.length<1">
+          <div class="empty" v-if="caseData.length<1">
             <img src="../../assets/images/empty.png" alt="">
             <p>{{current===0?'你还没有上传案例':'没有任何数据~'}}</p>
             <el-button type="primary" @click="toCreatCase" v-if="current===0">新建案例</el-button>
           </div>
           <el-pagination
-            v-if="caseData.list.length>0"
+            v-if="caseDatat.length>0"
             background
             style="text-align: center; margin: 30px 0"
             layout="prev, pager, next"
@@ -89,6 +89,7 @@ export default {
         page_no: 1,
         page_size: 10
       },
+      caseData: []
     }
   },
   components: {
@@ -100,18 +101,18 @@ export default {
     }
   },
   async asyncData(context){
-    let recomData = await context.app.$ajax.get('/api/case/my_case?page_no=1&page_size=10')
-    return {
-      caseData: recomData.data,
-      total: recomData.data.page.total
-    }
+    // let recomData = await context.app.$ajax.get('/api/case/my_case?page_no=1&page_size=10')
+    // return {
+    //   caseData: recomData.data,
+    //   total: recomData.data.page.total
+    // }
   },
   methods: {
     setTab (val,index) {
       if (index === this.current) return
       this.current = index
       this.searchForm.page_no = 1
-      this.caseData.list = []
+      this.caseData = []
       this.getData()
     },
     toCaseDetail (row) {
@@ -139,7 +140,10 @@ export default {
         params.logic_check = 1
       }
       this.$ajax.get('/api/case/my_case', params).then( (res) => {
-        this.caseData.list = res.data.list || []
+        if (res) {
+          this.caseData = res.data || []
+          this.total = res.data.page.total
+        }
       })
     }
   },
@@ -152,15 +156,18 @@ export default {
     // }
     if (!this.$store.state.userInfo.Name) {
       this.$ajax.get('/api/user/info').then((res) => {
-        this.userInfo = res.data
-        if (this.userInfo.Check) {
-          this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+        if (res) {
+          this.userInfo = res.data
+          if (this.userInfo.Check) {
+            this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+          }
+          this.$store.commit('setUserInfo', this.userInfo)
         }
-        this.$store.commit('setUserInfo', this.userInfo)
       })
     } else {
       this.userInfo = this.$store.state.userInfo
     }
+    this.getData()
   }
 }
 </script>

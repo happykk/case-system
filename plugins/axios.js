@@ -29,7 +29,6 @@ var interceptors = {
       axios.interceptors.request.use(config => {
         return callback(config)
       }, error => {
-        // return Promise.reject(error)
         return errorCallback(error)
       })
     }
@@ -39,14 +38,12 @@ var interceptors = {
       axios.interceptors.response.use(config => {
         return callback(config)
       }, error => {
-        // return Promise.reject(error)
         return errorCallback(error)
       })
     }
   }
 }
-interceptors.response.use(
-  response => {
+interceptors.response.use(response => {
     // 避免取对象报错
     if (response.data.data === null) {
       response.data.data = false
@@ -91,12 +88,42 @@ interceptors.response.use(
   }
 )
 
-export default ({ app }, inject) => {
+export default ({ app, store, redirect }, inject) => {
   inject('ajax', ajax)
 }
+
+// export default ({ app, store, redirect }) => {
+//   // The server-side needs a full url to works
+//   // if (process.SERVER_BUILD) {
+//   //   axios.defaults.baseURL = `http://${process.env.HOST || 'localhost'}:${process.env.PORT || 3000}`
+//   // }
+//   // interceptors request
+//   axios.interceptors.request.use(config => {
+//     if (typeof document === 'object') {
+//       let token = getCookieInClient('token')
+//       if (token) {
+//         config.headers.Authorization = token;
+//       }
+//     }
+//     return config;
+//   }, err => {
+//     return Promise.reject(err);
+//   });
+
+//   axios.interceptors.response.use(response => {
+//     if (response.data.code === 401) {
+//       redirect('/login')
+//     }
+//     return response;
+//   }, function (error) {
+//     return Promise.reject(error);
+//   });
+// }
+
+
 // 在context中使用
 // asyncData(context) {
-//   context.app.$request.post('url', {}).then((data) => {
+//   context.app.$ajax.post('url', {}).then((data) => {
 //     console.log("data", data);
 //   }).catch((err) => {
 //     console.log("err", err.response.data);
@@ -104,6 +131,6 @@ export default ({ app }, inject) => {
 // }
 
 // 在vue实例this中使用
-// this.$request.post('login_URL', {}).then((data) => {
+// this.$ajax.post('login_URL', {}).then((data) => {
 //   console.log(data)
 // })

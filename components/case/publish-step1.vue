@@ -37,7 +37,7 @@
         <el-input v-model="editInfo.english_keyword" placeholder="请输入英文关键词"></el-input>
       </el-form-item>
       <el-form-item prop="applicable_courses" label="适用课程">
-        <el-input v-model="editInfo.applicable_courses" placeholder="请输入摘要"></el-input>
+        <el-input v-model="editInfo.applicable_courses" placeholder="请输入适用课程"></el-input>
       </el-form-item>
       <el-form-item prop="summary" label="摘要">
         <el-input type="textarea" :rows="4" v-model="editInfo.summary" placeholder="请输入摘要"></el-input>
@@ -46,7 +46,7 @@
         <el-input type="textarea" :rows="4" v-model="editInfo.english_summary" placeholder="请输入英文摘要"></el-input>
       </el-form-item>
       <el-form-item prop="applicable_object" label="适用对象">
-        <el-input v-model="editInfo.applicable_object" placeholder="请输入摘要"></el-input>
+        <el-input v-model="editInfo.applicable_object" placeholder="请输入适用对象"></el-input>
       </el-form-item>
     </el-form>
     <div class="footer">
@@ -121,7 +121,7 @@ export default {
       let params = {case_name, cat_id, author, author_company, director_name, translator_name, language, chinese_keyword, english_keyword, summary, english_summary, applicable_object, applicable_courses}
       params._xsrf = this.xsrf
       this.$ajax.get('/api/case/case_base', params).then((res) => {
-        if (res.code === 0) {
+        if (res) {
           sessionStorage.setItem('caseKey', res.data)
           this.$emit('stepChange', 2)
         }
@@ -129,13 +129,13 @@ export default {
     },
     getCateList () {
       this.$ajax.get('/api/menu', {type: 3}).then( res => {
-        this.catList = res.data
+        if(res) {
+          this.catList = res.data
+        }
       })
     }
   },
   created () {
-    // let _xsrfList = getCookieInClient('_xsrf')
-    // this.xsrf = window.atob(_xsrfList.split('|')[0])
     this.getCateList()
     let url,params
     if (this.$route.query.id) {
@@ -148,8 +148,10 @@ export default {
       params = ''
     }
     this.$ajax.get(url, params).then( res => {
-      this.editInfo = res.data
-      this.editInfo.cat_id==0 && (this.editInfo.cat_id= '')
+      if (res) {
+        this.editInfo = res.data
+        this.editInfo.cat_id==0 && (this.editInfo.cat_id= '')
+      }
     })
   }
 }

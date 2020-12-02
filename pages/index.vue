@@ -102,7 +102,6 @@
   import VHeader from '~/components/home/header'
   import VFooter from '~/components/home/footer'
   import VBanner from '~/components/home/banner'
-  import indexNewsListShow from '~/components/common/indexNewsListShow'
 
   export default {
     data(){
@@ -117,8 +116,7 @@
     components: {
       VHeader,
       VFooter,
-      VBanner,
-      indexNewsListShow
+      VBanner
     },
     head () {
       return {

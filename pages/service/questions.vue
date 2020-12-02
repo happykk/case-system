@@ -57,7 +57,6 @@
 					</ul>
 				</div>
 				<div class="questions_list_pagination_box">
-					<pagination :total="total" :display="display" :current-page='current' @pagechange="pagechange"></pagination>
 				</div>
 			</div>
 		</div>
@@ -67,7 +66,6 @@
 
 <script>
 	import axios from 'axios'
-	import pagination from '~/components/common/pagination.vue'
 
 	export default {
 		data (){
@@ -77,7 +75,6 @@
 			}
 		},
 		components: {
-			pagination
 		},
 		methods : {
             pagechange (currentPage){

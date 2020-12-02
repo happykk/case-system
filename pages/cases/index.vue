@@ -134,7 +134,9 @@
         let cat_id = this.searchForm.cat_id || 0
         let params = Object.assign({},this.searchForm, {cat_id: cat_id})
         this.$ajax.get(`/api/case/list`, params).then( (res) => {
-          this.recomData.list = res.data.list || []
+          if(res){
+            this.recomData.list = res.data.list || []
+          }
         })
       },
       toDetail (row) {

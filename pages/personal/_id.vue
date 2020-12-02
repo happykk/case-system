@@ -170,7 +170,7 @@
         this.formLoading = true
         this.$ajax.get('/api/case/check_case', this.dialogForm).then( res => {
           this.formLoading = false
-          if (res.code === 0) {
+          if (res && res.code === 0) {
             this.$message.success("操作成功");
             this.dialogVisible = false
             setTimeout(()=>{
@@ -185,19 +185,21 @@
           type: type,
           case_id: this.params.case_id
         }).then(res => {
-          this.total = res.data
-          this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-            loading.close();
-          });
-          const newurl = this.$router.resolve({
-            path: '/viewcase',
-            query: {
-              _t: this.total,
-              type: type,
-              case_id: this.params.case_id
-            }
-          })
-          window.open(newurl.href,'_blank')
+          if (res) {
+            this.total = res.data
+            this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+              loading.close();
+            });
+            const newurl = this.$router.resolve({
+              path: '/viewcase',
+              query: {
+                _t: this.total,
+                type: type,
+                case_id: this.params.case_id
+              }
+            })
+            window.open(newurl.href,'_blank')
+          }
         })
       }
     },

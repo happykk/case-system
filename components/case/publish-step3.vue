@@ -51,7 +51,7 @@ export default {
   font-size: 16px;
   color: #333333;
   text-align: center;
-  margin-bottom: 70px;
+  margin-top: 70px;
 }
 .other {
   text-align: center;

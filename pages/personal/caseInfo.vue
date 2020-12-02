@@ -32,7 +32,7 @@
       <div class="right-content">
         <div class="bg-box-radius">
           <div class="case-list">
-            <div class="case-item" v-for="(item, index) in caseData.list" :key="index">
+            <div class="case-item" v-for="(item, index) in caseData" :key="index">
               <h3 @click="toDetail(item)">{{item.case_name}}</h3>
               <div class="case-desc">{{item.summary}}</div>
               <div class="case-info">
@@ -42,7 +42,7 @@
               </div>
             </div>
           </div>
-          <div class="empty" v-if="caseData.list.length<1">
+          <div class="empty" v-if="caseData.length<1">
             <img src="../../assets/images/empty.png" alt="">
             <p>暂时没有数据~</p>
           </div>
@@ -51,6 +51,7 @@
             style="text-align: center; margin: 30px 0"
             layout="prev, pager, next"
             :page-size="searchForm.page_no"
+            v-if="caseData.length>0"
             @current-change="handleCurrentChange"
             :total="total">
           </el-pagination>
@@ -77,10 +78,8 @@ export default {
         page_no: 1,
         page_size: 10
       },
+      caseData: []
     }
-  },
-  components: {
-    
   },
   head () {
     return {
@@ -88,10 +87,10 @@ export default {
     }
   },
   async asyncData(context){
-    let recomData = await context.app.$ajax.get('/api/case/check_case_list?page_no=1&page_size=10')
-    return {
-      caseData: recomData.data
-    }
+    // let recomData = await context.app.$ajax.get('/api/case/check_case_list?page_no=1&page_size=10')
+    // return {
+    //   caseData: recomData.data
+    // }
   },
   methods: {
     handleCurrentChange(val){
@@ -99,7 +98,10 @@ export default {
     },
     getData(){
       this.$ajax.get(`/api/case/check_case_list`, this.searchForm).then( (res) => {
-        this.caseData.list = this.caseData.list.concat(res.data.list || [])
+        if (res) {
+          this.caseData = res.data
+          this.total = res.data.page.total
+        }
       })
     },
     toDetail (row) {
@@ -115,15 +117,18 @@ export default {
     // }
     if (!this.$store.state.userInfo.Name) {
       this.$ajax.get('/api/user/info').then((res) => {
-        this.userInfo = res.data
-        if (this.userInfo.Check) {
-          this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+        if (res) {
+          this.userInfo = res.data
+          if (this.userInfo.Check) {
+            this.tabs.push({name: '案例审核', link: '/personal/caseInfo'})
+          }
+          this.$store.commit('setUserInfo', this.userInfo)
         }
-        this.$store.commit('setUserInfo', this.userInfo)
       })
     } else {
       this.userInfo = this.$store.state.userInfo
     }
+    this.getData()
   }
 }
 </script>

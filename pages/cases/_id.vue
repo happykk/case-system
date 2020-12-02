@@ -17,7 +17,7 @@
           </div>
           <div class="line">
             <span class="label">指导者</span>
-            <span class="value">{{detail.author_company}}</span>
+            <span class="value">{{detail.director_name}}</span>
           </div>
           <div class="line">
             <span class="label">译者</span>
@@ -54,6 +54,7 @@
           <div class="view-link">
             <span class="view-content" @click="viewContent(1)">查看全文</span>
             <span class="view-desc" @click="viewContent(2)">查看说明文档</span>
+            <span class="view-desc" @click="download">下载</span>
           </div>
         </div>
       </div>
@@ -230,7 +231,7 @@
       getData () {
         this.$ajax.get('/api/comment/case_comment', this.params).then( res => {
           this.formLoading = false
-          if (res.code === 0) {
+          if (res && res.code === 0) {
             this.list = res.data.list || []
             this.total = res.data.page.total
           }
@@ -242,19 +243,21 @@
           type: type,
           case_id: this.params.case_id
         }).then(res => {
-          this.total = res.data
           this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-            loading.close();
-          });
-          const newurl = this.$router.resolve({
-            path: '/viewcase',
-            query: {
-              _t: this.total,
-              type: type,
-                case_id: this.params.case_id
-            }
+            loading.close()
           })
-          window.open(newurl.href,'_blank')
+          if (res) {
+            this.total = res.data
+            const newurl = this.$router.resolve({
+              path: '/viewcase',
+              query: {
+                _t: this.total,
+                type: type,
+                case_id: this.params.case_id
+              }
+            })
+            window.open(newurl.href,'_blank')
+          }
           // this.$router.push({
           //   path: '/viewcase',
           //   query: {
@@ -264,6 +267,10 @@
           //   }
           // })
         })
+      },
+      download () {
+        let url = this.$store.state.basicUrl+'/api/case/download?case_id='+this.params.case_id
+        window.open(url, "_blank");
       }
     },
 		async mounted (){
