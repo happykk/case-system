@@ -14,7 +14,7 @@
             </div>
             <div class="recom-info-box">
               <div class="recom-info-img">
-                <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:list.id}}">
+                <nuxt-link target="_blank" :to="{name: 'news-newsView-id',query:{id:list.id}}">
                   <img :src="'http://81.71.142.158/static/image/'+list.img">
                 </nuxt-link>
                 <div class="recom-info-times" v-if="list.update_time">

@@ -99,7 +99,7 @@ export default {
     getData(){
       this.$ajax.get(`/api/case/check_case_list`, this.searchForm).then( (res) => {
         if (res) {
-          this.caseData = res.data
+          this.caseData = res.data.list || []
           this.total = res.data.page.total
         }
       })

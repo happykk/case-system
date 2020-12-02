@@ -11,19 +11,19 @@
             <div v-for="(item, index) in newsData" :key="index" :class="{'special': index==0}">
               <div class="list">
                 <nuxt-link target="_blank" 
-                  :to="{name: 'news-newsView-id',params:{id:item.id}}">
+                  :to="{name: 'news-newsView-id',query:{id:item.id}}">
                   <img :src="item.img ? 'http://81.71.142.158/static/image/'+item.img : defaultImg">
                 </nuxt-link>
                 <div class="list-msg">
                   <div class="list-title ellipsis">
                     <nuxt-link target="_blank" 
-                  :to="{name: 'news-newsView-id',params:{id:item.id}}">{{ item.title }}</nuxt-link>
+                  :to="{name: 'news-newsView-id',query:{id:item.id}}">{{ item.title }}</nuxt-link>
                     <span v-if="index>0" class="fr time">{{item.update_time.split(' ')[0]}}</span>
                   </div>
                   <div class="list-info">
                     <p>{{item.desc}}</p>
                     <nuxt-link target="_blank" v-if="index==0" class="view-all fr" 
-                      :to="{name: 'news-newsView-id',params:{id:item.id}}">[查看全文]
+                      :to="{name: 'news-newsView-id',query:{id:item.id}}">[查看全文]
                     </nuxt-link>
                   </div>
                 </div>

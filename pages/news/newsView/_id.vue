@@ -30,22 +30,23 @@
           title: '详情',
           link: ''
         }],
+        articleData: ''
 			}
 		},
 		components: {
 			BreadCrumbs
 		},
 		async asyncData ({params,query,store}){
-			let id = query.id;
-	    	//详情数据
-	    	let articleData = await axios.get(`${process.env.BASE_URL}/api/article/text?id=${id}`);
-	    	//上下篇数据
-	    	// let preNextData = await axios.get(`${store.state.wordpressAPI}/article/getArticleNextAndBefore/${parId}/${id}`);
+			// let id = query.id;
+	    // 	//详情数据
+	    // 	let articleData = await axios.get(`${process.env.BASE_URL}/api/article/text?id=${id}`);
+	    // 	//上下篇数据
+	    // 	// let preNextData = await axios.get(`${store.state.wordpressAPI}/article/getArticleNextAndBefore/${parId}/${id}`);
 
-	    	return {
-	    		articleData: articleData.data.data,
-	    		// preNextData: preNextData.data.list,
-	    	}
+	    // 	return {
+	    // 		articleData: articleData.data.data,
+	    // 		// preNextData: preNextData.data.list,
+	    // 	}
 		},
 		head (){
 			return {
@@ -55,7 +56,16 @@
 					{name: 'description',hid: 'description',content: `${this.articleData.articleMetaDescription}`}
 				]
 			}
-		},
+    },
+    methods:{
+      getData () {
+        this.$ajax.get('/api/article/text', {id: this.$route.query.id}).then( res =>{
+          if (res) {
+            this.articleData = res.data
+          }
+        })
+      }
+    },
 		mounted (){
       if (this.$route.query.type == 2) {
         this.titles.splice(1, 0, {
@@ -68,6 +78,7 @@
           link: '/news'
         })
       }
+      this.getData()
 		}
 	}
 </script>

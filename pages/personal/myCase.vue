@@ -46,7 +46,7 @@
               <div class="case-info">
                 <span>作者: {{item.author}}</span>
                 <span>作者单位：{{item.author_company}}</span>
-                <span class="fr">入库时间: {{item.create_time.split(' ')[0]}}</span>
+                <span class="fr" v-if="item.create_time">入库时间: {{item.create_time.split(' ')[0]}}</span>
               </div>
             </div>
           </div>
@@ -56,7 +56,7 @@
             <el-button type="primary" @click="toCreatCase" v-if="current===0">新建案例</el-button>
           </div>
           <el-pagination
-            v-if="caseDatat.length>0"
+            v-if="caseData.length>0"
             background
             style="text-align: center; margin: 30px 0"
             layout="prev, pager, next"
@@ -141,7 +141,7 @@ export default {
       }
       this.$ajax.get('/api/case/my_case', params).then( (res) => {
         if (res) {
-          this.caseData = res.data || []
+          this.caseData = res.data.list || []
           this.total = res.data.page.total
         }
       })
