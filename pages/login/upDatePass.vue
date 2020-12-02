@@ -38,6 +38,7 @@
 </template>
 <script>
 import reCaptcha from '../login/reCaptcha'
+import md5 from 'js-md5'
 export default {
   layout: function (context) {
     return "login";
@@ -124,8 +125,8 @@ export default {
         if (valid) {
           let {old_password, new_password, code} = this.editInfo
           let params = {
-            old_password,
-            new_password,
+            old_password: md5(old_password),
+            new_password: md5(new_password),
             code
           }
           this.$ajax.get('/api/user/change_pwd', params).then((res) => {
