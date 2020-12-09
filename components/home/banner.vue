@@ -9,7 +9,7 @@
       <el-carousel-item class="carouel-item"
         v-for="(item, index) in bannerData"
         :key="index"
-        :style="`background: url(http://81.71.142.158/static/image/${item.img}) no-repeat center`"
+        :style="`background: url(https://www.hnuaccounting.com/static/image/${item.img}) no-repeat center`"
       ></el-carousel-item>
     </el-carousel>
     <div class="btn-box">

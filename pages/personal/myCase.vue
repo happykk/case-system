@@ -59,7 +59,7 @@
             v-if="caseData.length>0"
             background
             style="text-align: center; margin: 30px 0"
-            layout="prev, pager, next"
+            layout="total, prev, pager, next"
             :page-size="searchForm.page_size"
             @current-change="handleCurrentChange"
             :total="total">

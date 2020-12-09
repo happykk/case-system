@@ -7,7 +7,7 @@ Vue.use(Vuex)
 const state = {
 	wordpressAPI: 'http://visney.cn:81',
 	wordpressAPIForJob: 'http://visney.cn:8082',
-	basicUrl: 'http://106.52.85.160',
+	basicUrl: 'https://www.hnuaccounting.com',
 	headProdNav: {},
 	headNewsNav: {},
 	headJobNav: {},
@@ -63,7 +63,6 @@ const actions = {
 		// 	commit('setHeadJobNav',headJobNav.data);
 		// 案例分类
 		let cateData = await axios(`${state.basicUrl}/api/menu?type=3`);
-		debugger
 		commit('setCateData',cateData.data);
 	}
 };

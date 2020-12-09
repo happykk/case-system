@@ -5,8 +5,8 @@
     <!-- 面包屑部分结束 -->
     <div class="mod-block case-main">
       <div class="search-block">
-        <el-form :inline="true" :model="searchForm" label-position="right" label-width="120px">
-          <el-form-item label="案例名称">
+        <el-form :inline="true" :model="searchForm" label-position="right" label-width="120px" ref="searchForm">
+          <el-form-item label="案例名称" prop="case_name">
             <el-input v-model="searchForm.case_name" placeholder=""></el-input>
           </el-form-item>
           <el-form-item prop="cat_id" label="案例分类">
@@ -19,20 +19,30 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="作者">
+          <el-form-item label="作者" prop="author">
             <el-input v-model="searchForm.author" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="作者单位">
+          <el-form-item label="作者单位" prop="author_company">
             <el-input v-model="searchForm.author_company" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="中文关键词">
+          <el-form-item label="中文关键词" prop="chinese_keyword">
             <el-input v-model="searchForm.chinese_keyword" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="英文关键词">
+          <el-form-item label="英文关键词" prop="english_keyword">
             <el-input v-model="searchForm.english_keyword" placeholder=""></el-input>
           </el-form-item>
-          <el-form-item label="适用课程">
+          <el-form-item label="适用课程" prop="applicable_courses">
             <el-input v-model="searchForm.applicable_courses" placeholder=""></el-input>
+          </el-form-item>
+          <el-form-item label="入库时间" prop="creatTime">
+            <el-date-picker
+              v-model="searchForm.creatTime"
+              type="daterange"
+              value-format="timestamp"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="search">查询</el-button>
@@ -58,7 +68,7 @@
       <el-pagination
         background
         style="text-align: center; margin: 30px 0"
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :page-size="searchForm.page_size"
         :current-page="searchForm.page_no"
         @current-change="handleCurrentChange"
@@ -94,7 +104,8 @@
           english_keyword: '',
           applicable_courses: '',
           page_no: 1,
-          page_size: 10
+          page_size: 10,
+          creatTime: ''
         },
         total: 0
       }
@@ -133,6 +144,9 @@
       getData(){
         let cat_id = this.searchForm.cat_id || 0
         let params = Object.assign({},this.searchForm, {cat_id: cat_id})
+        params.start = params.creatTime[0]
+        params.end = params.creatTime[1]
+        delete params.creatTime
         this.$ajax.get(`/api/case/list`, params).then( (res) => {
           if(res){
             this.recomData.list = res.data.list || []

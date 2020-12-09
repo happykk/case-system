@@ -77,6 +77,10 @@
           {
             title: '帮助中心',
             link: '/service/1'
+          },
+          {
+            title: '案例投稿',
+            link: '/personal/creatCase'
           }
         ],
         activeIndex: 0,

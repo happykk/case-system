@@ -15,7 +15,7 @@
             <div class="recom-info-box">
               <div class="recom-info-img">
                 <nuxt-link target="_blank" :to="{name: 'news-newsView-id',query:{id:list.id}}">
-                  <img :src="'http://81.71.142.158/static/image/'+list.img">
+                  <img :src="'https://www.hnuaccounting.com/static/image/'+list.img">
                 </nuxt-link>
                 <div class="recom-info-times" v-if="list.update_time">
                   <span><font class="dd" id="dd-1">{{list.update_time.split(' ')[0].split('-')[2]}}</font></span>
@@ -31,7 +31,7 @@
         <el-pagination
           background
           style="text-align: center;"
-          layout="prev, pager, next"
+          layout="total, prev, pager, next"
           :page-size="formData.page_size"
           :current-page="formData.page_no"
           @current-change="handleCurrentChange"
@@ -53,7 +53,7 @@
             :autoplay="false">
             <el-carousel-item v-for="item in newNes" :key="item.id">
               <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.id}}">
-                <img :src="'http://81.71.142.158/static/image/'+item.img" alt="">
+                <img :src="'https://www.hnuaccounting.com/static/image/'+item.img" alt="">
                 <div class="h-n-item">
                   {{item.title}}
                 </div>
@@ -69,7 +69,7 @@
           </h2>
           <ul class="new-news-list">
             <li v-for="item in hotNews" :key="item.id">
-              <img :src="'http://81.71.142.158/static/image/'+item.img" alt="">
+              <img :src="'https://www.hnuaccounting.com/static/image/'+item.img" alt="">
               <div>
                 <nuxt-link target="_blank" :to="{name: 'news-newsView-id',params:{id:item.id}}">{{item.title}}</nuxt-link>
               </div>

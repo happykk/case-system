@@ -16,7 +16,7 @@
       <el-pagination
         background
         style="text-align: center;"
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         @current-change="handleCurrentChange"
         :total="total">
       </el-pagination>

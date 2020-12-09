@@ -114,7 +114,7 @@
         <el-pagination
           v-if="list>10"
           style="text-align: center; margin: 30px 0"
-          layout="prev, pager, next"
+          layout="total, prev, pager, next"
           :page-size="params.page_size"
           :current-page="params.page_no"
           @current-change="handleCurrentChange"

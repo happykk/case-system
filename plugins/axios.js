@@ -3,7 +3,7 @@ import axios from 'axios'
 import querystring from 'querystring'
 import { Message } from "element-ui";
 // axios.defaults.withCredentials = true
-axios.defaults.baseURL='http://106.52.85.160'
+axios.defaults.baseURL='https://www.hnuaccounting.com'
 var ajaxFun = function (type, url, data) {
   data = data || {}
   if (type === 'post') {

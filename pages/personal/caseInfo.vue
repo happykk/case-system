@@ -49,7 +49,7 @@
           <el-pagination
             background
             style="text-align: center; margin: 30px 0"
-            layout="prev, pager, next"
+            layout="total, prev, pager, next"
             :page-size="searchForm.page_no"
             v-if="caseData.length>0"
             @current-change="handleCurrentChange"

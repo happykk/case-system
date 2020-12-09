@@ -12,7 +12,7 @@
               <div class="list">
                 <nuxt-link target="_blank" 
                   :to="{name: 'news-newsView-id',query:{id:item.id}}">
-                  <img :src="item.img ? 'http://81.71.142.158/static/image/'+item.img : defaultImg">
+                  <img :src="item.img ? 'https://www.hnuaccounting.com/static/image/'+item.img : defaultImg">
                 </nuxt-link>
                 <div class="list-msg">
                   <div class="list-title ellipsis">

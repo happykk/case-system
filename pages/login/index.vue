@@ -9,7 +9,7 @@
           <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop='check'>
-          <reCaptcha :sitekey="sitekey" @getValidateCode='getValidateCode' v-model="loginForm.check"></reCaptcha>
+          <reCaptcha ref="gRecaptcha"  :sitekey="sitekey" @getValidateCode='getValidateCode' v-model="loginForm.check"></reCaptcha>
          <!-- <vue-recaptcha :sitekey="sitekey" :loadRecaptchaScript="true"></vue-recaptcha> -->
         </el-form-item>
         <el-form-item>
@@ -77,12 +77,13 @@ export default {
     submitForm () {
       this.$refs.loginForm.validate((valid) => {
         let password = md5(this.loginForm.password)
-        console.log(this.loginForm.password)
         let params = Object.assign({}, this.loginForm, {password: password})
         if (valid) {
           this.$ajax.post(`/api/login`, params).then((data) => {
             if (data) {
               this.$router.push('/personal')
+            } else {
+              this.$refs.gRecaptcha.reset()
             }
           })
         }
