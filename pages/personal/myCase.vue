@@ -42,11 +42,14 @@
           <div class="case-list">
             <div class="case-item" v-for="(item, index) in caseData" :key="index">
               <h3 @click="toCaseDetail(item)">{{item.case_name}}</h3>
-              <div class="case-desc">{{item.summary}}</div>
+              <div class="case-desc">
+                <p>{{item.summary}}</p>
+              </div>
               <div class="case-info">
                 <span>作者: {{item.author}}</span>
                 <span>作者单位：{{item.author_company}}</span>
-                <span class="fr" v-if="item.create_time">入库时间: {{item.create_time.split(' ')[0]}}</span>
+                <span v-if="item.create_time" style="color: #999;">入库时间: {{item.create_time.split(' ')[0]}}</span>
+                <span class="fr abandon" @click="handleAbandon(item)">撤回</span>
               </div>
             </div>
           </div>
@@ -71,6 +74,7 @@
 </template>
 <script>
 import {getCookieInClient} from '../../utils/assist'
+import { MessageBox } from "element-ui";
 export default {
   data (){
     return{
@@ -144,6 +148,20 @@ export default {
           this.caseData = res.data.list || []
           this.total = res.data.page.total
         }
+      })
+    },
+    handleAbandon(item) {
+      MessageBox.confirm('确定撤回该案例吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$ajax.get('/api/case/abandon', {id: item.id}).then( (res) => {
+          if (res) {
+            this.$message.success('操作成功')
+            this.getData()
+          }
+        })
       })
     }
   },
@@ -284,11 +302,12 @@ export default {
   }
   .case-item{
     padding: 10px 0;
-    border-bottom: 1px solid #DCDFE6;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e5e5e5;
   }
   .case-item h3{
     font-size: 20px;
-    color: #7e8c8d;
+    color: #333;
     margin-bottom: 6px;
     cursor: pointer;
   }
@@ -296,9 +315,13 @@ export default {
     color: #136fe1;
   }
   .case-desc{
-    font-size: 14px;
-    color: #333;
-    padding: 15px 0;
+    font-size: 13px;
+    color: #999;
+    padding: 10px;
+    background: #f9f9f9;
+  }
+  .case-desc p{
+    line-height: 24px;
     display: -webkit-box;
     /* autoprefixer: off */
     -webkit-box-orient: vertical;
@@ -307,15 +330,23 @@ export default {
     overflow: hidden;
   }
   .case-info{
-    color: #bcbcbc;
-    font-size: 12px;
-    margin-top: 6px;
+    color: #666;
+    font-size: 13px;
+    margin-top: 10px;
   }
   .case-info span{
     margin-right: 15px;
   }
+  .abandon{
+    color: #37a;
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid #37a;
+    border-radius: 20px;
+    padding: 0px 10px;
+  }
   .tab-box{
-    height: 65px;
+    height: 60px;
     font-size: 14px;
     color: #999;
     padding: 0 30px;
@@ -326,7 +357,7 @@ export default {
   }
   .tab-box span{
     display: inline-block;
-    line-height: 64px;
+    line-height: 58px;
     margin-right: 50px;
     cursor: pointer;
   }

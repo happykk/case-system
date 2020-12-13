@@ -33,13 +33,14 @@
         </div>
 				<div class="i-h-nav" :class="{'isHome': isHome}">
           <div class="center">
-            <router-link
+            <a v-for="(item, index) in menuLists" :key="index" :class="{'active': activeIndex === index}" @click.stop.prevent="changeIndex(item, index)">{{item.title}}</a>
+            <!-- <router-link
               :to="item.link"
               v-for="(item, index) in menuLists"
               :key="index"
               :class="{'active': activeIndex === index}"
               @click.native="changeIndex(index)"
-            >{{ item.title }}</router-link>
+            >{{ item.title }}</router-link> -->
           </div>	
 				</div>
 			</div>
@@ -81,6 +82,9 @@
           {
             title: '案例投稿',
             link: '/personal/creatCase'
+          },{
+            title: '案例审核',
+            link: '/personal/caseInfo'
           }
         ],
         activeIndex: 0,
@@ -109,8 +113,16 @@
       }
 		},
 		methods: {
-			changeIndex (index) {
+			changeIndex (item, index) {
+        if (this.activeIndex===index) {
+          return
+        }
+        if ( item.link === '/personal/caseInfo'&& !this.$store.state.userInfo.Check) {
+          this.$message.warning('暂无操作权限')
+          return
+        }
         this.activeIndex = index
+        this.$router.push(item.link)
       },
       showPopMenu () {
         this.isShowPopMenu = !this.isShowPopMenu
@@ -213,7 +225,7 @@
   }
   .i-h-nav .center a:hover,
   .i-h-nav .center a.active {
-    background-color: #136fe1;
+    background-color: #1b60b6;
     color: #fff;
   }
   .dropdown {

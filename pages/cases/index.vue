@@ -54,11 +54,13 @@
     <div class="mod-block case-list">
       <div class="case-item" v-for="(item, index) in recomData.list" :key="index">
         <h3 @click="toDetail(item)">{{item.case_name}}</h3>
-        <span>{{item.summary}}</span>
+        <div class="case-desc">
+          <p>{{item.summary}}</p>
+        </div>
         <div class="case-info">
           <span>作者: {{item.author}}</span>&nbsp;&nbsp;&nbsp;&nbsp;
           <span>作者单位：{{item.author_company}}</span>
-          <span class="fr">入库时间: {{item.create_time.split(' ')[0]}}</span>
+          <span class="fr" style="color: #999;">入库时间: {{item.create_time.split(' ')[0]}}</span>
         </div>
       </div>
       <div class="empty" v-if="recomData.list.length<1">
@@ -123,7 +125,7 @@
 		  }
 		},
 		async asyncData(context){
-      let recomData = await context.app.$ajax.get(`/api/case/list?page_no=1&page_size=10&cat_id=0&case_name=${context.query.keyword||''}`)
+      let recomData = await context.app.$ajax.get(`/api/case/list?page_no=1&page_size=10&cat_id=0&begin_time=0&end_time=0&case_name=${context.query.keyword||''}`)
       return {
         recomData: recomData.data
       }
@@ -144,8 +146,8 @@
       getData(){
         let cat_id = this.searchForm.cat_id || 0
         let params = Object.assign({},this.searchForm, {cat_id: cat_id})
-        params.start = params.creatTime[0]
-        params.end = params.creatTime[1]
+        params.begin_time = params.creatTime[0] || 0
+        params.end_time = params.creatTime[1] || 0
         delete params.creatTime
         this.$ajax.get(`/api/case/list`, params).then( (res) => {
           if(res){
@@ -183,29 +185,28 @@
   padding: 10px 20px 20px;
   margin-top: 20px;
 }
-.case-item {
-  padding-bottom: 10px;
+.case-item{
+  padding: 10px 0;
   margin-bottom: 10px;
-  border-bottom: 1px solid #f4f5f9;
+  border-bottom: 1px solid #e5e5e5;
 }
 .case-item h3{
   font-size: 20px;
-  color: #7e8c8d;
+  color: #333;
   margin-bottom: 6px;
-}
-.case-item h3{
   cursor: pointer;
-  font-size: 20px;
-  color: #7e8c8d;
-  margin-bottom: 6px;
 }
 .case-item h3:hover{
   color: #136fe1;
 }
 .case-desc{
-  font-size: 14px;
-  color: #333;
-  padding: 15px 0;
+  font-size: 13px;
+  color: #999;
+  padding: 10px;
+  background: #f9f9f9;
+}
+.case-desc p{
+  line-height: 24px;
   display: -webkit-box;
   /* autoprefixer: off */
   -webkit-box-orient: vertical;
@@ -214,9 +215,12 @@
   overflow: hidden;
 }
 .case-info{
-  color: #bcbcbc;
-  font-size: 12px;
-  margin-top: 6px;
+  color: #666;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.case-info span{
+  margin-right: 15px;
 }
 .empty{
   padding: 40px 0;

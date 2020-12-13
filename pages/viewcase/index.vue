@@ -4,6 +4,7 @@
       <img :src="$store.state.basicUrl+'/api/case/image?page_no='+page_no+'&type='+type+'&case_id='+case_id" >
     </div>
     <div class="btn">
+      <span class="total">共<b>{{total}}</b>页</span>
       <i class="el-icon-caret-top" @click="pagePrev"></i>
       <i class="el-icon-caret-bottom" @click="pageNext"></i>
       <i class="el-icon-download" @click="download"></i>
@@ -93,5 +94,11 @@ export default {
   display: block;
   margin-bottom: 10px;
   cursor: pointer;
+}
+.total{
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 10px;
+  display: inline-block;
 }
 </style>

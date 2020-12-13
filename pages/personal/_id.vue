@@ -12,7 +12,7 @@
           </tr>
           <tr>
             <th>分类：</th>
-            <td>{{filterCate(detail.cat_id)}}</td>
+            <td v-if="detail.cat_id">{{filterCate(detail.cat_id)}}</td>
           </tr>
           <tr>
             <th>案例作者：</th>
@@ -64,7 +64,7 @@
           </tr>
           <tr v-if="companyList.length>0">
             <th>上传者单位：</th>
-            <td>{{filterCompany(detail.upload_company_id)}}</td>
+            <td v-if="detail.upload_company_id">{{filterCompany(detail.upload_company_id)}}</td>
           </tr>
           <tr>
             <th>案例入库时间：</th>
@@ -95,6 +95,15 @@
       <div style="text-align: center;">
         <el-radio v-model="dialogForm.operating" label="1" border>审核通过</el-radio>
         <el-radio v-model="dialogForm.operating" label="2" border>审核不通过</el-radio>
+        <div class="comment">
+          <p>评语</p>
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入评语"
+            v-model="dialogForm.comment">
+          </el-input>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -132,7 +141,8 @@
         formLoading: false,
         dialogForm: {
           operating: '',
-          id: ''
+          id: '',
+          comment: ''
         }
 			}
     },
@@ -242,5 +252,13 @@
     width: 800px;
     text-align: center;
     margin: 20px 0 20px 20px;
+  }
+  .comment{
+    margin-top: 20px;
+    padding: 0 50px 0 20px;
+  }
+  .comment p{
+    text-align: left;
+    margin-bottom: 5px;
   }
 </style>
