@@ -13,7 +13,7 @@
               <br>
               电话：0731-88822899 邮箱：admin@hnuaccounting.com
               <br>
-              版权所有：©2020湖南省研究生会计专业案例库 湘ICP备2020022919号
+              备案号：湘ICP备2020022919号
             </p>
           </div>
         </div>
@@ -67,8 +67,8 @@ a:last-child{
 }
 .info-box{
   margin-left: 20px;
-  padding-left: 20px;
-  border-left: 1px solid rgba(255,255,255,.1);
+  /* padding-left: 20px;
+  border-left: 1px solid rgba(255,255,255,.1); */
 }
 .friend-links{
   width: 216px;
