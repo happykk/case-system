@@ -2,18 +2,18 @@
 	<footer class="footer">
     <div class="w">
       <div class="info fl">
-        <img src="~/assets/images/index/code.png" alt="" class="code">
+        <!-- <img src="~/assets/images/index/code.png" alt="" class="code"> -->
         <div class="info-box">
           <div class="link">
             <nuxt-link :to="item.link" v-for="(item, index) in menuLists" :key="index">{{ item.title }}</nuxt-link>
           </div>
           <div class="msg">
             <p>
-              地址：湖南省长沙市岳麓区麓山南路麓山门
+              地址：湖南省长沙市岳麓区麓山南路11号
               <br>
-              电话：400-888-8888 邮箱：murongqiaochu@live.com
+              电话：0731-88822899 邮箱：admin@hnuaccounting.com
               <br>
-              版权所有：©2014-2019北清智库商学院 京ICP备16035884号
+              版权所有：©2020湖南省研究生会计专业案例库 湘ICP备2020022919号
             </p>
           </div>
         </div>
